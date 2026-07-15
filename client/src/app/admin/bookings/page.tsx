@@ -9,7 +9,7 @@ import { formatDate } from "@/lib/format";
 
 const STATUS_STYLES: Record<BookingStatus, string> = {
   pending: "bg-amber-100 text-amber-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
+  confirmed: "bg-rose-100 text-rose-800",
   declined: "bg-red-100 text-red-700",
 };
 
