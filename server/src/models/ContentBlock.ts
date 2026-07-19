@@ -34,3 +34,16 @@ const policyPageSchema = new Schema(
 
 export type PolicyPage = InferSchemaType<typeof policyPageSchema>;
 export const PolicyPageModel = model("PolicyPage", policyPageSchema);
+
+const testimonialSchema = new Schema(
+  {
+    quote: { type: String, required: true },
+    author: { type: String, required: true },
+    context: { type: String, required: true },
+    order: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+
+export type Testimonial = InferSchemaType<typeof testimonialSchema>;
+export const TestimonialModel = model("Testimonial", testimonialSchema);

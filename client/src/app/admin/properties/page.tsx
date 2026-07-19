@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Star } from "lucide-react";
 import { AdminGuard } from "@/components/admin/AdminGuard";
 import { useAdminAuth } from "@/context/AdminAuthContext";
 import { apiFetch } from "@/lib/api";
@@ -14,6 +14,7 @@ function PropertiesContent() {
   const { token } = useAdminAuth();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   async function load() {
     if (!token) return;
@@ -38,6 +39,20 @@ function PropertiesContent() {
     load();
   }
 
+  async function toggleFeatured(p: Property) {
+    if (!token) return;
+    setTogglingId(p._id);
+    await apiFetch(`/api/properties/${p._id}`, {
+      method: "PUT",
+      token,
+      body: JSON.stringify({ featured: !p.featured }),
+    });
+    setProperties((prev) =>
+      prev.map((x) => (x._id === p._id ? { ...x, featured: !p.featured } : x))
+    );
+    setTogglingId(null);
+  }
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -59,6 +74,9 @@ function PropertiesContent() {
               <th className="px-5 py-3">City</th>
               <th className="px-5 py-3">Price / night</th>
               <th className="px-5 py-3">Status</th>
+              <th className="px-5 py-3 text-center" title="Featured on homepage">
+                <Star size={13} className="inline" />
+              </th>
               <th className="px-5 py-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -80,6 +98,20 @@ function PropertiesContent() {
                     {p.status}
                   </span>
                 </td>
+                <td className="px-5 py-3 text-center">
+                  <button
+                    onClick={() => toggleFeatured(p)}
+                    disabled={togglingId === p._id}
+                    title={p.featured ? "Remove from homepage" : "Feature on homepage"}
+                    className={`inline-flex items-center justify-center rounded-full p-1 transition-colors disabled:opacity-40 ${
+                      p.featured
+                        ? "text-amber-500 hover:text-amber-600"
+                        : "text-ink-soft/30 hover:text-amber-400"
+                    }`}
+                  >
+                    <Star size={16} fill={p.featured ? "currentColor" : "none"} />
+                  </button>
+                </td>
                 <td className="px-5 py-3">
                   <div className="flex justify-end gap-3">
                     <Link href={`/admin/properties/${p._id}/edit`} className="text-ink-soft hover:text-forest">
@@ -94,7 +126,7 @@ function PropertiesContent() {
             ))}
             {!loading && properties.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-5 py-6 text-center text-ink-soft">
+                <td colSpan={7} className="px-5 py-6 text-center text-ink-soft">
                   No properties yet — add your first listing.
                 </td>
               </tr>

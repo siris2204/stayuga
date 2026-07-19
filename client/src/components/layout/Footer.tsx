@@ -8,7 +8,7 @@ import { InstagramIcon, FacebookIcon, YoutubeIcon } from "@/components/ui/Social
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/owner")) return null;
 
   return (
     <footer className="mt-32 border-t border-line/70 bg-forest text-cream">

@@ -24,7 +24,7 @@ export default async function Home() {
       <ValueProps />
       <FeaturedProperties properties={properties} />
       <ExperiencesTeaser experiences={experiences.slice(0, 3)} />
-      <Testimonials />
+      <Testimonials testimonials={content.testimonials} />
       <CtaSection />
     </>
   );

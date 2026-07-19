@@ -14,6 +14,9 @@ import experienceRoutes from "./routes/experiences.routes";
 import contentRoutes from "./routes/content.routes";
 import uploadRoutes from "./routes/uploads.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
+import ownerAuthRoutes from "./routes/owner.auth.routes";
+import ownerRoutes from "./routes/owner.routes";
+import adminOwnersRoutes from "./routes/admin.owners.routes";
 
 export const app = express();
 
@@ -33,6 +36,9 @@ app.use("/api/experiences", experienceRoutes);
 app.use("/api/content", contentRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/owner/auth", ownerAuthRoutes);
+app.use("/api/owner", ownerRoutes);
+app.use("/api/admin/owners", adminOwnersRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

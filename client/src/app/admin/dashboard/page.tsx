@@ -55,7 +55,7 @@ function DashboardContent() {
                     <tr key={b._id}>
                       <td className="px-5 py-3">{b.name}</td>
                       <td className="px-5 py-3">
-                        {typeof b.property === "object" ? b.property.title : b.property}
+                        {b.property && typeof b.property === "object" ? b.property.title : b.property ?? "—"}
                       </td>
                       <td className="px-5 py-3">
                         {formatDate(b.checkIn)} – {formatDate(b.checkOut)}

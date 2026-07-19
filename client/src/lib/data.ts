@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api";
-import { ContentBlocks, Experience, FaqItem, PolicyPage, Property } from "@/lib/types";
+import { ContentBlocks, Experience, FaqItem, PolicyPage, Property, Testimonial } from "@/lib/types";
 
 export async function getProperties(params?: Record<string, string>) {
   const query = params ? `?${new URLSearchParams(params).toString()}` : "";
@@ -33,7 +33,7 @@ export async function getExperience(slug: string) {
 }
 
 export async function getContent() {
-  return apiFetch<{ blocks: ContentBlocks; faqs: FaqItem[]; policies: PolicyPage[] }>(
+  return apiFetch<{ blocks: ContentBlocks; faqs: FaqItem[]; policies: PolicyPage[]; testimonials: Testimonial[] }>(
     "/api/content"
   );
 }

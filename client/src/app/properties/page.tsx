@@ -12,7 +12,13 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ type?: string; city?: string; minGuests?: string }>;
+  searchParams: Promise<{
+    type?: string;
+    city?: string;
+    minGuests?: string;
+    checkIn?: string;
+    checkOut?: string;
+  }>;
 }
 
 export default async function PropertiesPage({ searchParams }: PageProps) {
@@ -33,21 +39,49 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
           description="Every property is personally vetted for design, comfort, and setting."
         />
 
-        <div className="mt-10">
-          <PropertyFilters type={params.type} city={params.city} minGuests={params.minGuests} />
-        </div>
-
-        {properties.length === 0 ? (
-          <p className="mt-16 text-center text-ink-soft">
-            No properties match those filters yet — try adjusting your search.
-          </p>
-        ) : (
-          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {properties.map((property) => (
-              <PropertyCard key={property._id} property={property} />
-            ))}
+        <div className="mt-10 flex items-start gap-8">
+          {/* Left sidebar — sticky filters */}
+          <div className="hidden lg:block w-72 shrink-0 sticky top-24 self-start">
+            <PropertyFilters
+              type={params.type}
+              city={params.city}
+              minGuests={params.minGuests}
+              checkIn={params.checkIn}
+              checkOut={params.checkOut}
+            />
           </div>
-        )}
+
+          {/* Right — property grid */}
+          <div className="flex-1 min-w-0">
+            {/* Mobile filters (above cards on small screens) */}
+            <div className="lg:hidden mb-6">
+              <PropertyFilters
+                type={params.type}
+                city={params.city}
+                minGuests={params.minGuests}
+                checkIn={params.checkIn}
+                checkOut={params.checkOut}
+              />
+            </div>
+
+            {properties.length === 0 ? (
+              <p className="mt-16 text-center text-ink-soft">
+                No properties match those filters yet — try adjusting your search.
+              </p>
+            ) : (
+              <>
+                <p className="mb-6 text-sm text-ink-soft">
+                  {properties.length} {properties.length === 1 ? "property" : "properties"} found
+                </p>
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
+                  {properties.map((property) => (
+                    <PropertyCard key={property._id} property={property} />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </Container>
     </div>
   );

@@ -102,3 +102,11 @@ export interface ContentBlocks {
   "homepage-hero"?: HomepageHero;
   "about-mission"?: AboutMission;
 }
+
+export interface Testimonial {
+  _id: string;
+  quote: string;
+  author: string;
+  context: string;
+  order: number;
+}

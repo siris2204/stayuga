@@ -65,12 +65,42 @@ router.patch(
   requireAdmin,
   validateBody(statusSchema),
   asyncHandler(async (req, res) => {
+    const prev = await BookingModel.findById(req.params.id);
+    if (!prev) throw new ApiError(404, "Booking not found");
+
     const booking = await BookingModel.findByIdAndUpdate(
       req.params.id,
       { status: req.body.status },
       { new: true }
     ).populate("property", "title slug");
     if (!booking) throw new ApiError(404, "Booking not found");
+
+    const propertyId = typeof booking.property === "object"
+      ? (booking.property as any)._id
+      : booking.property;
+
+    // When confirmed → push a booking block into the property
+    if (req.body.status === "confirmed" && prev.status !== "confirmed") {
+      await PropertyModel.findByIdAndUpdate(propertyId, {
+        $push: {
+          blockedDates: {
+            startDate: booking.checkIn,
+            endDate: booking.checkOut,
+            reason: `Booking: ${booking.name}`,
+            source: "booking",
+            bookingRef: booking._id,
+          },
+        },
+      });
+    }
+
+    // When un-confirmed (declined/pending) → remove the booking block
+    if (prev.status === "confirmed" && req.body.status !== "confirmed") {
+      await PropertyModel.findByIdAndUpdate(propertyId, {
+        $pull: { blockedDates: { bookingRef: booking._id } },
+      });
+    }
+
     res.json({ booking });
   })
 );

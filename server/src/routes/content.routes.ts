@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { ContentBlockModel, FaqItemModel, PolicyPageModel } from "../models/ContentBlock";
+import { ContentBlockModel, FaqItemModel, PolicyPageModel, TestimonialModel } from "../models/ContentBlock";
 import { asyncHandler } from "../middleware/asyncHandler";
 import { validateBody } from "../middleware/validate";
 import { requireAdmin } from "../middleware/auth";
@@ -11,13 +11,14 @@ const router = Router();
 router.get(
   "/",
   asyncHandler(async (_req, res) => {
-    const [blocks, faqs, policies] = await Promise.all([
+    const [blocks, faqs, policies, testimonials] = await Promise.all([
       ContentBlockModel.find(),
       FaqItemModel.find().sort({ order: 1 }),
       PolicyPageModel.find(),
+      TestimonialModel.find().sort({ order: 1 }),
     ]);
     const blockMap = Object.fromEntries(blocks.map((b) => [b.key, b.value]));
-    res.json({ blocks: blockMap, faqs, policies });
+    res.json({ blocks: blockMap, faqs, policies, testimonials });
   })
 );
 
@@ -99,6 +100,44 @@ router.put(
       { new: true, upsert: true }
     );
     res.json({ policy });
+  })
+);
+
+const testimonialSchema = z.object({
+  quote: z.string().min(5),
+  author: z.string().min(2),
+  context: z.string().min(2),
+  order: z.number().optional(),
+});
+
+router.post(
+  "/testimonials",
+  requireAdmin,
+  validateBody(testimonialSchema),
+  asyncHandler(async (req, res) => {
+    const testimonial = await TestimonialModel.create(req.body);
+    res.status(201).json({ testimonial });
+  })
+);
+
+router.put(
+  "/testimonials/:id",
+  requireAdmin,
+  validateBody(testimonialSchema.partial()),
+  asyncHandler(async (req, res) => {
+    const testimonial = await TestimonialModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!testimonial) throw new ApiError(404, "Testimonial not found");
+    res.json({ testimonial });
+  })
+);
+
+router.delete(
+  "/testimonials/:id",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const testimonial = await TestimonialModel.findByIdAndDelete(req.params.id);
+    if (!testimonial) throw new ApiError(404, "Testimonial not found");
+    res.status(204).send();
   })
 );
 

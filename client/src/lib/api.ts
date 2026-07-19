@@ -2,9 +2,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export class ApiRequestError extends Error {
   status: number;
-  constructor(status: number, message: string) {
+  fields?: Record<string, string>;
+  constructor(status: number, message: string, fields?: Record<string, string>) {
     super(message);
     this.status = status;
+    this.fields = fields;
   }
 }
 
@@ -27,7 +29,7 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({ error: res.statusText }));
-    throw new ApiRequestError(res.status, body.error ?? "Request failed");
+    throw new ApiRequestError(res.status, body.error ?? "Request failed", body.fields);
   }
 
   if (res.status === 204) return undefined as T;

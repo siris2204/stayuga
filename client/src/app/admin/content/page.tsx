@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react";
 import { AdminGuard } from "@/components/admin/AdminGuard";
 import { useAdminAuth } from "@/context/AdminAuthContext";
 import { apiFetch } from "@/lib/api";
-import { ContentBlocks, FaqItem, PolicyPage } from "@/lib/types";
+import { ContentBlocks, FaqItem, PolicyPage, Testimonial } from "@/lib/types";
 import { Input, Textarea } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 
@@ -79,7 +79,7 @@ function FaqManager({ token, initial }: { token: string; initial: FaqItem[] }) {
   const [answer, setAnswer] = useState("");
   const [adding, setAdding] = useState(false);
 
-  async function addFaq(e: React.FormEvent) {
+  async function addFaq(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!question || !answer) return;
     setAdding(true);
@@ -156,14 +156,101 @@ function PolicyEditor({ token, slug, label, initial }: { token: string; slug: st
   );
 }
 
+function TestimonialsManager({ token, initial }: { token: string; initial: Testimonial[] }) {
+  const [items, setItems] = useState(initial);
+  const [form, setForm] = useState({ quote: "", author: "", context: "" });
+  const [adding, setAdding] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ quote: "", author: "", context: "" });
+
+  async function addTestimonial(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!form.quote || !form.author || !form.context) return;
+    setAdding(true);
+    const { testimonial } = await apiFetch<{ testimonial: Testimonial }>("/api/content/testimonials", {
+      method: "POST",
+      token,
+      body: JSON.stringify({ ...form, order: items.length + 1 }),
+    });
+    setItems([...items, testimonial]);
+    setForm({ quote: "", author: "", context: "" });
+    setAdding(false);
+  }
+
+  async function saveEdit(id: string) {
+    const { testimonial } = await apiFetch<{ testimonial: Testimonial }>(`/api/content/testimonials/${id}`, {
+      method: "PUT",
+      token,
+      body: JSON.stringify(editForm),
+    });
+    setItems(items.map((t) => (t._id === id ? testimonial : t)));
+    setEditId(null);
+  }
+
+  async function remove(id: string) {
+    await apiFetch(`/api/content/testimonials/${id}`, { method: "DELETE", token });
+    setItems(items.filter((t) => t._id !== id));
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="divide-y divide-line/70 rounded-xl border border-line/70">
+        {items.map((t) => (
+          <div key={t._id} className="p-4">
+            {editId === t._id ? (
+              <div className="space-y-2">
+                <Textarea label="Quote" value={editForm.quote} onChange={(e) => setEditForm({ ...editForm, quote: e.target.value })} />
+                <Input label="Author" value={editForm.author} onChange={(e) => setEditForm({ ...editForm, author: e.target.value })} />
+                <Input label="Property / context" value={editForm.context} onChange={(e) => setEditForm({ ...editForm, context: e.target.value })} />
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" onClick={() => saveEdit(t._id)}>Save</Button>
+                  <button type="button" onClick={() => setEditId(null)} className="text-sm text-ink-soft hover:text-ink">Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-ink">"{t.quote}"</p>
+                  <p className="mt-1 text-xs text-ink-soft">{t.author} — {t.context}</p>
+                </div>
+                <div className="flex shrink-0 gap-2">
+                  <button
+                    onClick={() => { setEditId(t._id); setEditForm({ quote: t.quote, author: t.author, context: t.context }); }}
+                    className="text-ink-soft hover:text-forest"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button onClick={() => remove(t._id)} className="text-ink-soft hover:text-red-600">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        {items.length === 0 && <p className="p-4 text-sm text-ink-soft">No reviews yet. Add one below — or leave empty to show the default reviews.</p>}
+      </div>
+
+      <form onSubmit={addTestimonial} className="space-y-3 rounded-xl border border-dashed border-line p-4">
+        <Textarea label="Quote (guest review)" value={form.quote} onChange={(e) => setForm({ ...form, quote: e.target.value })} />
+        <Input label="Guest name / author" value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} placeholder="e.g. Meera S." />
+        <Input label="Property / context" value={form.context} onChange={(e) => setForm({ ...form, context: e.target.value })} placeholder="e.g. Ananta Villa, Kasauli" />
+        <Button type="submit" variant="outline" disabled={adding}>
+          {adding ? "Adding..." : "Add review"}
+        </Button>
+      </form>
+    </div>
+  );
+}
+
 function ContentContent() {
   const { token } = useAdminAuth();
-  const [data, setData] = useState<{ blocks: ContentBlocks; faqs: FaqItem[]; policies: PolicyPage[] } | null>(
+  const [data, setData] = useState<{ blocks: ContentBlocks; faqs: FaqItem[]; policies: PolicyPage[]; testimonials: Testimonial[] } | null>(
     null
   );
 
   useEffect(() => {
-    apiFetch<{ blocks: ContentBlocks; faqs: FaqItem[]; policies: PolicyPage[] }>("/api/content").then(
+    apiFetch<{ blocks: ContentBlocks; faqs: FaqItem[]; policies: PolicyPage[]; testimonials: Testimonial[] }>("/api/content").then(
       setData
     );
   }, []);
@@ -204,6 +291,14 @@ function ContentContent() {
               }
             }
           />
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-line/70 bg-white p-6">
+        <h2 className="font-display text-lg text-ink">Guest reviews</h2>
+        <p className="mt-1 text-sm text-ink-soft">These appear in the "What our guests remember" section on the homepage.</p>
+        <div className="mt-4">
+          <TestimonialsManager token={token} initial={data.testimonials} />
         </div>
       </section>
 

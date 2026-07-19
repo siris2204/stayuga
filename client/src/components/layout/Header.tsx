@@ -20,7 +20,7 @@ export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  if (pathname?.startsWith("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/owner")) return null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/90 backdrop-blur">

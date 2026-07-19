@@ -1,7 +1,9 @@
 export function formatPrice(amount: number, currency = "INR"): string {
+  // Strip any non-alpha chars (e.g. "INR20000" → "INR") and fall back to INR
+  const code = currency.replace(/[^A-Za-z]/g, "").toUpperCase() || "INR";
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency,
+    currency: code,
     maximumFractionDigits: 0,
   }).format(amount);
 }
