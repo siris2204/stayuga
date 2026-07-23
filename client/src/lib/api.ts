@@ -52,7 +52,8 @@ export async function uploadImage(file: File, token: string): Promise<string> {
   }
 
   const { url } = (await res.json()) as { url: string };
-  return `${API_URL}${url}`;
+  // Local-disk uploads return a relative path; Cloudinary returns an absolute URL.
+  return url.startsWith("http") ? url : `${API_URL}${url}`;
 }
 
 export { API_URL };

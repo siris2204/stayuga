@@ -1,26 +1,35 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import { env } from "../config/env";
 
 const UPLOAD_DIR = path.join(__dirname, "..", "..", "uploads");
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-/**
- * Local-disk storage for Phase 1. To swap in Cloudinary later, replace this
- * module's `upload` + `publicUrlFor` with a Cloudinary-backed implementation —
- * every caller only depends on this file's exports, not on multer directly.
- */
-const diskStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const safeName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, safeName);
-  },
-});
+const cloudinaryEnabled = configureCloudinary(env.cloudinaryUrl);
 
+function configureCloudinary(cloudinaryUrl: string): boolean {
+  if (!cloudinaryUrl) return false;
+
+  const match = cloudinaryUrl.match(/^cloudinary:\/\/(.+):(.+)@(.+)$/);
+  if (!match) {
+    console.warn("[storage] CLOUDINARY_URL is set but malformed — falling back to local disk storage");
+    return false;
+  }
+
+  const [, apiKey, apiSecret, cloudName] = match;
+  cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret, secure: true });
+  return true;
+}
+
+/**
+ * Always parses uploads into memory. Persistence is decided at request time by
+ * `saveUploadedFile` — Cloudinary when CLOUDINARY_URL is configured, local disk
+ * otherwise — so callers never depend on which backend is active.
+ */
 export const upload = multer({
-  storage: diskStorage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if (!file.mimetype.startsWith("image/")) {
@@ -31,7 +40,30 @@ export const upload = multer({
   },
 });
 
-export function publicUrlFor(filename: string): string {
+export async function saveUploadedFile(file: Express.Multer.File): Promise<string> {
+  return cloudinaryEnabled ? uploadToCloudinary(file.buffer) : saveToLocalDisk(file);
+}
+
+function uploadToCloudinary(buffer: Buffer): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "stayuga", resource_type: "image" },
+      (error, result) => {
+        if (error || !result) {
+          reject(error ?? new Error("Cloudinary upload failed"));
+          return;
+        }
+        resolve(result.secure_url);
+      }
+    );
+    stream.end(buffer);
+  });
+}
+
+function saveToLocalDisk(file: Express.Multer.File): string {
+  const ext = path.extname(file.originalname);
+  const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+  fs.writeFileSync(path.join(UPLOAD_DIR, filename), file.buffer);
   return `/uploads/${filename}`;
 }
 
