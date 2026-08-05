@@ -29,7 +29,7 @@ export function Testimonials({ testimonials }: { testimonials?: Testimonial[] })
         <SectionHeading eyebrow="Guest stories" title="What our guests remember" align="center" light />
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
           {items.map((t, i) => (
-            <figure key={"_id" in t ? t._id : i} className="rounded-2xl border border-cream/10 bg-cream/5 p-8">
+            <figure key={"_id" in t ? (t as Testimonial)._id : i} className="rounded-2xl border border-cream/10 bg-cream/5 p-8">
               <blockquote className="font-display text-lg leading-relaxed text-cream/90">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
