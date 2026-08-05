@@ -2,13 +2,15 @@ import { Request, Response, NextFunction } from "express";
 import { ZodIssue, ZodTypeAny } from "zod";
 
 function humanize(issue: ZodIssue): string {
-  if (issue.code === "too_small" && issue.type === "string")
-    return `Must be at least ${issue.minimum} character${issue.minimum === 1 ? "" : "s"}`;
-  if (issue.code === "too_big" && issue.type === "string")
-    return `Must be at most ${issue.maximum} characters`;
-  if (issue.code === "invalid_type" && issue.received === "undefined") return "This field is required";
-  if (issue.code === "invalid_type" && issue.expected === "number") return "Must be a valid number";
-  if (issue.code === "too_small" && issue.type === "number") return "Must be greater than 0";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const i = issue as any;
+  if (issue.code === "too_small" && i.origin === "string")
+    return `Must be at least ${i.minimum} character${i.minimum === 1 ? "" : "s"}`;
+  if (issue.code === "too_big" && i.origin === "string")
+    return `Must be at most ${i.maximum} characters`;
+  if (issue.code === "invalid_type" && i.input === undefined) return "This field is required";
+  if (issue.code === "invalid_type" && i.expected === "number") return "Must be a valid number";
+  if (issue.code === "too_small" && i.origin === "number") return "Must be greater than 0";
   return issue.message;
 }
 

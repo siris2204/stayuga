@@ -40,12 +40,12 @@ router.get(
 router.get(
   "/properties/:id/calendar",
   asyncHandler(async (req: AuthedRequest, res) => {
-    await assertOwns(req.owner!.id, req.params.id);
+    await assertOwns(req.owner!.id, String(req.params.id));
 
-    const property = await PropertyModel.findById(req.params.id).select("title slug blockedDates");
+    const property = await PropertyModel.findById(String(req.params.id)).select("title slug blockedDates");
     if (!property) throw new ApiError(404, "Property not found");
 
-    const bookings = await BookingModel.find({ property: req.params.id })
+    const bookings = await BookingModel.find({ property: String(req.params.id) })
       .select("name checkIn checkOut guests status")
       .sort({ checkIn: 1 });
 
@@ -64,14 +64,14 @@ router.post(
   "/properties/:id/blocks",
   validateBody(blockSchema),
   asyncHandler(async (req: AuthedRequest, res) => {
-    await assertOwns(req.owner!.id, req.params.id);
+    await assertOwns(req.owner!.id, String(req.params.id));
 
     if (req.body.endDate <= req.body.startDate) {
       throw new ApiError(400, "End date must be after start date");
     }
 
     const property = await PropertyModel.findByIdAndUpdate(
-      req.params.id,
+      String(req.params.id),
       {
         $push: {
           blockedDates: {
@@ -96,9 +96,9 @@ router.post(
 router.delete(
   "/properties/:id/blocks/:blockId",
   asyncHandler(async (req: AuthedRequest, res) => {
-    await assertOwns(req.owner!.id, req.params.id);
+    await assertOwns(req.owner!.id, String(req.params.id));
 
-    const property = await PropertyModel.findById(req.params.id);
+    const property = await PropertyModel.findById(String(req.params.id));
     if (!property) throw new ApiError(404, "Property not found");
 
     const block = property.blockedDates.find(
@@ -109,7 +109,7 @@ router.delete(
       throw new ApiError(400, "Cannot manually remove a platform booking block. Update the booking status instead.");
     }
 
-    await PropertyModel.findByIdAndUpdate(req.params.id, {
+    await PropertyModel.findByIdAndUpdate(String(req.params.id), {
       $pull: { blockedDates: { _id: req.params.blockId } },
     });
 

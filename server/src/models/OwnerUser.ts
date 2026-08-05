@@ -12,11 +12,9 @@ const ownerUserSchema = new Schema(
   { timestamps: true }
 );
 
-ownerUserSchema.pre("validate", function (next) {
+ownerUserSchema.pre("validate", function () {
   if (!this.email && !this.phone) {
-    next(new Error("An owner must have at least an email or a phone number"));
-  } else {
-    next();
+    throw new Error("An owner must have at least an email or a phone number");
   }
 });
 
