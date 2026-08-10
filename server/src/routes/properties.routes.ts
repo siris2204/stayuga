@@ -41,13 +41,23 @@ router.get(
   "/",
   optionalAdmin,
   asyncHandler(async (req: AuthedRequest, res) => {
-    const { type, city, minGuests, featured, status } = req.query;
+    const { type, city, minGuests, featured, status, checkIn, checkOut } = req.query;
     const filter: Record<string, unknown> = {};
 
     if (type) filter.type = type;
     if (city) filter["location.city"] = new RegExp(String(city), "i");
     if (minGuests) filter["capacity.maxGuests"] = { $gte: Number(minGuests) };
     if (featured) filter.featured = featured === "true";
+
+    if (checkIn && checkOut && typeof checkIn === "string" && typeof checkOut === "string") {
+      const ci = new Date(checkIn);
+      const co = new Date(checkOut);
+      if (!isNaN(ci.getTime()) && !isNaN(co.getTime())) {
+        filter.blockedDates = {
+          $not: { $elemMatch: { startDate: { $lt: co }, endDate: { $gt: ci } } },
+        };
+      }
+    }
 
     if (!req.admin) {
       // Anonymous requests only ever see published listings, regardless of `status`.

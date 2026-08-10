@@ -27,6 +27,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   if (params.type) filters.type = params.type;
   if (params.city) filters.city = params.city;
   if (params.minGuests) filters.minGuests = params.minGuests;
+  if (params.checkIn) filters.checkIn = params.checkIn;
+  if (params.checkOut) filters.checkOut = params.checkOut;
 
   const properties = await getProperties(filters);
 

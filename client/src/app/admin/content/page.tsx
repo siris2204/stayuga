@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react";
 import { AdminGuard } from "@/components/admin/AdminGuard";
 import { useAdminAuth } from "@/context/AdminAuthContext";
 import { apiFetch } from "@/lib/api";
-import { ContentBlocks, FaqItem, PolicyPage, Testimonial } from "@/lib/types";
+import { ContactInfo, ContentBlocks, FaqItem, PolicyPage, Testimonial } from "@/lib/types";
 import { Input, Textarea } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 
@@ -66,6 +66,35 @@ function AboutEditor({ token, initial }: { token: string; initial: { heading: st
     <div className="space-y-4">
       <Input label="About heading" value={heading} onChange={(e) => setHeading(e.target.value)} />
       <Textarea label="About body" value={body} onChange={(e) => setBody(e.target.value)} />
+      <Button type="button" onClick={save} disabled={saving}>
+        {saving ? "Saving..." : saved ? "Saved" : "Save"}
+      </Button>
+    </div>
+  );
+}
+
+function ContactInfoEditor({ token, initial }: { token: string; initial: ContactInfo }) {
+  const [form, setForm] = useState(initial);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  async function save() {
+    setSaving(true);
+    await apiFetch("/api/content/blocks/contact-info", {
+      method: "PUT",
+      token,
+      body: JSON.stringify({ value: form }),
+    });
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  return (
+    <div className="space-y-4">
+      <Input label="Email address" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+      <Input label="Phone number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+      <Input label="Office / location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
       <Button type="button" onClick={save} disabled={saving}>
         {saving ? "Saving..." : saved ? "Saved" : "Save"}
       </Button>
@@ -273,6 +302,23 @@ function ContentContent() {
               data.blocks["homepage-hero"] ?? {
                 heading: "Curated stays where nature, comfort, and memories meet",
                 subheading: "Handpicked villas and farmhouses for the moments worth slowing down for.",
+              }
+            }
+          />
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-line/70 bg-white p-6">
+        <h2 className="font-display text-lg text-ink">Contact information</h2>
+        <p className="mt-1 text-sm text-ink-soft">Shown on the Contact page and in the site footer.</p>
+        <div className="mt-4">
+          <ContactInfoEditor
+            token={token}
+            initial={
+              data.blocks["contact-info"] ?? {
+                email: "hello@stayuga.com",
+                phone: "+91 00000 00000",
+                location: "Hyderabad, India",
               }
             }
           />

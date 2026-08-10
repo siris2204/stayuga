@@ -3,13 +3,21 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { getContent } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Contact Us",
   description: "Get in touch with the Stayuga team for enquiries, events, and bookings.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { blocks } = await getContent();
+  const contact = blocks["contact-info"] ?? {
+    email: "hello@stayuga.com",
+    phone: "+91 00000 00000",
+    location: "Hyderabad, India",
+  };
+
   return (
     <div className="py-16">
       <Container>
@@ -26,21 +34,21 @@ export default function ContactPage() {
                 <Mail size={18} className="mt-0.5 text-forest" />
                 <div>
                   <p className="text-sm font-medium text-ink">Email</p>
-                  <p className="text-sm text-ink-soft">hello@stayuga.com</p>
+                  <p className="text-sm text-ink-soft">{contact.email}</p>
                 </div>
               </div>
               <div className="mt-5 flex items-start gap-3">
                 <Phone size={18} className="mt-0.5 text-forest" />
                 <div>
                   <p className="text-sm font-medium text-ink">Phone</p>
-                  <p className="text-sm text-ink-soft">+91 00000 00000</p>
+                  <p className="text-sm text-ink-soft">{contact.phone}</p>
                 </div>
               </div>
               <div className="mt-5 flex items-start gap-3">
                 <MapPin size={18} className="mt-0.5 text-forest" />
                 <div>
                   <p className="text-sm font-medium text-ink">Office</p>
-                  <p className="text-sm text-ink-soft">Hyderabad, India</p>
+                  <p className="text-sm text-ink-soft">{contact.location}</p>
                 </div>
               </div>
             </div>

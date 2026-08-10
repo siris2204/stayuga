@@ -98,9 +98,16 @@ export interface AboutMission {
   body: string;
 }
 
+export interface ContactInfo {
+  email: string;
+  phone: string;
+  location: string;
+}
+
 export interface ContentBlocks {
   "homepage-hero"?: HomepageHero;
   "about-mission"?: AboutMission;
+  "contact-info"?: ContactInfo;
 }
 
 export interface Testimonial {

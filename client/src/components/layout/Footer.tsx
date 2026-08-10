@@ -1,13 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, Phone } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "@/components/ui/SocialIcons";
+import { apiFetch } from "@/lib/api";
+import { ContactInfo, ContentBlocks } from "@/lib/types";
+
+const DEFAULT_CONTACT: ContactInfo = {
+  email: "hello@stayuga.com",
+  phone: "+91 00000 00000",
+  location: "Hyderabad, India",
+};
 
 export function Footer() {
   const pathname = usePathname();
+  const [contact, setContact] = useState<ContactInfo>(DEFAULT_CONTACT);
+
+  useEffect(() => {
+    apiFetch<{ blocks: ContentBlocks }>("/api/content")
+      .then((data) => {
+        if (data.blocks["contact-info"]) setContact(data.blocks["contact-info"]);
+      })
+      .catch(() => {});
+  }, []);
+
   if (pathname?.startsWith("/admin") || pathname?.startsWith("/owner")) return null;
 
   return (
@@ -49,10 +68,10 @@ export function Footer() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-light">Get in touch</p>
           <ul className="mt-4 space-y-3 text-sm text-cream/80">
             <li className="flex items-center gap-2">
-              <Mail size={16} /> hello@stayuga.com
+              <Mail size={16} /> {contact.email}
             </li>
             <li className="flex items-center gap-2">
-              <Phone size={16} /> +91 00000 00000
+              <Phone size={16} /> {contact.phone}
             </li>
           </ul>
         </div>
