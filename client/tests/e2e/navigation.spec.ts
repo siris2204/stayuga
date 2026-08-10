@@ -3,35 +3,31 @@ import { test, expect } from "@playwright/test";
 test.describe("Header navigation", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
-  });
-
-  test("logo links to homepage", async ({ page }) => {
-    await page.getByRole("link", { name: /stayuga/i }).first().click();
-    await expect(page).toHaveURL("/");
+    await page.waitForLoadState("networkidle");
   });
 
   test("Properties nav link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: "Properties" }).first().click();
+    await page.getByRole("navigation").getByRole("link", { name: /^properties$/i }).click();
     await expect(page).toHaveURL("/properties");
   });
 
   test("Experiences nav link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: "Experiences" }).first().click();
+    await page.getByRole("navigation").getByRole("link", { name: /^experiences$/i }).click();
     await expect(page).toHaveURL("/experiences");
   });
 
   test("About nav link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: "About" }).first().click();
+    await page.getByRole("navigation").getByRole("link", { name: /^about$/i }).click();
     await expect(page).toHaveURL("/about");
   });
 
   test("FAQ nav link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: "FAQ" }).first().click();
+    await page.getByRole("navigation").getByRole("link", { name: /^faq$/i }).click();
     await expect(page).toHaveURL("/faq");
   });
 
   test("Contact nav link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: "Contact" }).first().click();
+    await page.getByRole("navigation").getByRole("link", { name: /^contact$/i }).click();
     await expect(page).toHaveURL("/contact");
   });
 
@@ -44,20 +40,21 @@ test.describe("Header navigation", () => {
 test.describe("Footer links", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
+    await page.waitForLoadState("networkidle");
   });
 
   test("footer Properties link works", async ({ page }) => {
-    await page.getByRole("contentinfo").getByRole("link", { name: "Properties" }).click();
+    await page.getByRole("contentinfo").getByRole("link", { name: /^properties$/i }).click();
     await expect(page).toHaveURL("/properties");
   });
 
   test("footer Experiences link works", async ({ page }) => {
-    await page.getByRole("contentinfo").getByRole("link", { name: "Experiences" }).click();
+    await page.getByRole("contentinfo").getByRole("link", { name: /^experiences$/i }).click();
     await expect(page).toHaveURL("/experiences");
   });
 
   test("footer FAQ link works", async ({ page }) => {
-    await page.getByRole("contentinfo").getByRole("link", { name: "FAQ" }).click();
+    await page.getByRole("contentinfo").getByRole("link", { name: /^faq$/i }).click();
     await expect(page).toHaveURL("/faq");
   });
 

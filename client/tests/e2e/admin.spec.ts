@@ -5,6 +5,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "Stayuga@123";
 
 async function loginAsAdmin(page: Page) {
   await page.goto("/admin/login");
+  await page.waitForLoadState("networkidle");
   await page.getByLabel(/email/i).fill(ADMIN_EMAIL);
   await page.getByLabel(/password/i).fill(ADMIN_PASSWORD);
   await page.getByRole("button", { name: /sign in/i }).click();
@@ -12,13 +13,17 @@ async function loginAsAdmin(page: Page) {
 }
 
 test.describe("Admin login", () => {
-  test("Sign in button is disabled while submitting", async ({ page }) => {
+  test("Sign in button is disabled while request is in-flight", async ({ page }) => {
+    // Intercept and delay the login request so we can catch the disabled state
+    await page.route("**/api/auth/login", async (route) => {
+      await new Promise((r) => setTimeout(r, 800));
+      await route.continue();
+    });
     await page.goto("/admin/login");
     await page.getByLabel(/email/i).fill("admin@stayuga.com");
-    await page.getByLabel(/password/i).fill("wrongpassword");
+    await page.getByLabel(/password/i).fill("anypassword");
     const btn = page.getByRole("button", { name: /sign in/i });
     await btn.click();
-    // Brief disabled state while submitting
     await expect(btn).toBeDisabled();
   });
 
@@ -42,27 +47,27 @@ test.describe("Admin dashboard", () => {
   });
 
   test("Properties sidebar link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: /properties/i }).first().click();
+    await page.getByRole("link", { name: /^properties$/i }).click();
     await expect(page).toHaveURL("/admin/properties");
   });
 
   test("Bookings sidebar link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: /bookings/i }).click();
+    await page.getByRole("link", { name: /^bookings$/i }).click();
     await expect(page).toHaveURL("/admin/bookings");
   });
 
   test("Owners sidebar link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: /owners/i }).click();
+    await page.getByRole("link", { name: /^owners$/i }).click();
     await expect(page).toHaveURL("/admin/owners");
   });
 
   test("Content sidebar link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: /content/i }).click();
+    await page.getByRole("link", { name: /^content$/i }).click();
     await expect(page).toHaveURL("/admin/content");
   });
 
   test("Leads sidebar link navigates correctly", async ({ page }) => {
-    await page.getByRole("link", { name: /leads/i }).click();
+    await page.getByRole("link", { name: /^leads$/i }).click();
     await expect(page).toHaveURL("/admin/leads");
   });
 });
@@ -71,6 +76,7 @@ test.describe("Admin properties", () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
     await page.goto("/admin/properties");
+    await page.waitForLoadState("networkidle");
   });
 
   test("Add property button navigates to new property form", async ({ page }) => {
@@ -84,19 +90,18 @@ test.describe("Admin properties", () => {
     await expect(page.getByRole("button", { name: /publish/i })).toBeVisible();
   });
 
-  test("Edit button opens inline edit for a property", async ({ page }) => {
-    const editBtn = page.locator("button[title='Edit property'], a[href*='/edit']").first();
-    if (await editBtn.count() > 0) {
-      await editBtn.click();
-      // Should open edit form or navigate
-      await expect(page.locator("form, [data-testid='edit-panel']")).toBeTruthy();
+  test("Edit link opens property edit form", async ({ page }) => {
+    const editLink = page.getByRole("link", { name: /edit/i }).first();
+    if (await editLink.count() > 0) {
+      await editLink.click();
+      await expect(page).toHaveURL(/\/edit$/);
     }
   });
 
-  test("Star featured toggle button is visible", async ({ page }) => {
-    const starBtn = page.locator("button[title*='featured'], button[title*='Feature']").first();
-    if (await starBtn.count() > 0) {
-      await expect(starBtn).toBeVisible();
+  test("Featured star button is present for each property", async ({ page }) => {
+    const starBtns = page.getByTitle(/feature|unfeature|featured/i);
+    if (await starBtns.count() > 0) {
+      await expect(starBtns.first()).toBeVisible();
     }
   });
 });
@@ -105,24 +110,36 @@ test.describe("Admin content", () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
     await page.goto("/admin/content");
+    await page.waitForLoadState("networkidle");
   });
 
-  test("Homepage hero Save button is visible", async ({ page }) => {
-    await expect(page.getByRole("button", { name: /save/i }).first()).toBeVisible();
+  test("Homepage hero Save button is visible and enabled", async ({ page }) => {
+    const heroSection = page.locator("section").filter({ hasText: /homepage hero/i });
+    await expect(heroSection.getByRole("button", { name: /save/i })).toBeVisible();
   });
 
-  test("Contact info Save button is visible", async ({ page }) => {
-    const sections = page.locator("section");
-    const contactSection = sections.filter({ hasText: /contact information/i });
+  test("Contact information Save button is visible", async ({ page }) => {
+    const contactSection = page.locator("section").filter({ hasText: /contact information/i });
     await expect(contactSection.getByRole("button", { name: /save/i })).toBeVisible();
   });
 
-  test("Add review button submits new testimonial", async ({ page }) => {
+  test("About page Save button is visible", async ({ page }) => {
+    const aboutSection = page.locator("section").filter({ hasText: /about page/i });
+    await expect(aboutSection.getByRole("button", { name: /save/i })).toBeVisible();
+  });
+
+  test("Add review button is visible", async ({ page }) => {
     await expect(page.getByRole("button", { name: /add review/i })).toBeVisible();
   });
 
   test("Add FAQ button is visible", async ({ page }) => {
     await expect(page.getByRole("button", { name: /add faq/i })).toBeVisible();
+  });
+
+  test("Policy page Save buttons are visible", async ({ page }) => {
+    const policySection = page.locator("section").filter({ hasText: /policy pages/i });
+    const saveBtns = policySection.getByRole("button", { name: /save/i });
+    await expect(saveBtns.first()).toBeVisible();
   });
 });
 
@@ -130,6 +147,7 @@ test.describe("Admin owners", () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
     await page.goto("/admin/owners");
+    await page.waitForLoadState("networkidle");
   });
 
   test("Add owner button opens the create form", async ({ page }) => {
@@ -137,9 +155,14 @@ test.describe("Admin owners", () => {
     await expect(page.getByText(/new owner account/i)).toBeVisible();
   });
 
-  test("Close button on create form hides it", async ({ page }) => {
+  test("X button on create form closes it", async ({ page }) => {
     await page.getByRole("button", { name: /add owner/i }).click();
-    await page.getByRole("button").filter({ has: page.locator("svg") }).last().click();
+    await expect(page.getByText(/new owner account/i)).toBeVisible();
+    // The X close button is inside the form header
+    await page.locator("button[onClick]").filter({ hasText: "" }).last().click();
+    // Or target by finding button next to "New owner account" heading
+    const formHeader = page.getByText(/new owner account/i).locator("..");
+    await formHeader.getByRole("button").click();
     await expect(page.getByText(/new owner account/i)).not.toBeVisible();
   });
 });

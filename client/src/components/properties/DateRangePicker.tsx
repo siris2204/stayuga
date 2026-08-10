@@ -58,6 +58,7 @@ export function DateRangePicker({ checkIn, checkOut, onChange }: Props) {
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
+          aria-label="Previous month"
           onClick={() => setViewMonth(subMonths(viewMonth, 1))}
           disabled={!canGoPrev}
           className="rounded-full p-1 hover:bg-sand disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -69,6 +70,7 @@ export function DateRangePicker({ checkIn, checkOut, onChange }: Props) {
         </span>
         <button
           type="button"
+          aria-label="Next month"
           onClick={() => setViewMonth(addMonths(viewMonth, 1))}
           className="rounded-full p-1 hover:bg-sand transition-colors"
         >

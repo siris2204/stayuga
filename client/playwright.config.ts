@@ -1,6 +1,8 @@
+import path from "path";
 import { defineConfig, devices } from "@playwright/test";
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
+const isCI = !!process.env.PLAYWRIGHT_BASE_URL;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -15,13 +17,15 @@ export default defineConfig({
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],
-  // Start dev server automatically when running locally
-  webServer: process.env.PLAYWRIGHT_BASE_URL
+  // When PLAYWRIGHT_BASE_URL is set (e.g. Vercel), skip local server startup.
+  // Otherwise start the full monorepo dev stack (client + server) from the root.
+  webServer: isCI
     ? undefined
     : {
         command: "npm run dev",
+        cwd: path.resolve(__dirname, ".."),
         port: 3000,
         reuseExistingServer: true,
-        timeout: 60_000,
+        timeout: 120_000,
       },
 });
