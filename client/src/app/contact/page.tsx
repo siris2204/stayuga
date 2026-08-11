@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { getContent } from "@/lib/data";
+import { emptyContent, getContent } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const { blocks } = await getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] }));
+  const { blocks } = await getContent().catch(emptyContent);
   const contact = blocks["contact-info"] ?? {
     email: "hello@stayuga.com",
     phone: "+91 00000 00000",

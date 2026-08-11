@@ -1,4 +1,4 @@
-import { getContent, getExperiences, getProperties } from "@/lib/data";
+import { emptyContent, getContent, getExperiences, getProperties } from "@/lib/data";
 import { Hero } from "@/components/home/Hero";
 import { ValueProps } from "@/components/home/ValueProps";
 import { FeaturedProperties } from "@/components/home/FeaturedProperties";
@@ -10,7 +10,7 @@ export default async function Home() {
   const [properties, experiences, content] = await Promise.all([
     getProperties({ featured: "true" }).catch(() => []),
     getExperiences().catch(() => []),
-    getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] })),
+    getContent().catch(emptyContent),
   ]);
 
   const hero = content.blocks["homepage-hero"] ?? {

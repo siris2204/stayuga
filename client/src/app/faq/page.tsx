@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { ChevronDown } from "lucide-react";
-import { getContent } from "@/lib/data";
+import { emptyContent, getContent } from "@/lib/data";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function FaqPage() {
-  const { faqs } = await getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] }));
+  const { faqs } = await getContent().catch(emptyContent);
 
   return (
     <div className="py-16">

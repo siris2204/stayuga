@@ -38,6 +38,15 @@ export async function getContent() {
   );
 }
 
+export function emptyContent() {
+  return {
+    blocks: {} as ContentBlocks,
+    faqs: [] as FaqItem[],
+    policies: [] as PolicyPage[],
+    testimonials: [] as Testimonial[],
+  };
+}
+
 export async function getPolicy(slug: string) {
   const { policy } = await apiFetch<{ policy: PolicyPage }>(`/api/content/policies/${slug}`);
   return policy;

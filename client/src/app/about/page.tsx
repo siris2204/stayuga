@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import { getContent } from "@/lib/data";
+import { emptyContent, getContent } from "@/lib/data";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ValueProps } from "@/components/home/ValueProps";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const { blocks } = await getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] }));
+  const { blocks } = await getContent().catch(emptyContent);
   const mission = blocks["about-mission"] ?? {
     heading: "Our mission",
     body: "Stayuga curates a small, handpicked portfolio of luxury villas and farmhouses, each personally vetted for design, service, and setting.",
