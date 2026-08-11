@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/Button";
 
 const schema = z.object({
   name: z.string().min(2, "Enter your full name"),
-  email: z.string().email("Enter a valid email"),
+  email: z.email("Enter a valid email"),
   phone: z.string().min(7, "Enter a valid phone number"),
   checkIn: z.string().min(1, "Select a check-in date"),
   checkOut: z.string().min(1, "Select a check-out date"),
@@ -143,7 +143,7 @@ export function BookingInquiryForm({
       <div>
         <p className="mb-1 text-sm font-medium text-ink">Additional services</p>
         <p className="mb-3 text-xs text-ink-soft">Select everything you'd like us to arrange — optional.</p>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="flex flex-wrap gap-2">
           {SERVICES.map((service) => {
             const selected = (values.additionalServices ?? []).includes(service);
             return (
@@ -157,17 +157,13 @@ export function BookingInquiryForm({
                     selected ? current.filter((s) => s !== service) : [...current, service]
                   );
                 }}
-                className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition-colors ${
+                className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors whitespace-nowrap ${
                   selected
-                    ? "border-forest bg-forest/8 font-medium text-forest"
-                    : "border-line text-ink hover:border-forest/50"
+                    ? "border-forest bg-forest text-cream font-medium"
+                    : "border-line text-ink hover:border-forest/60 bg-white"
                 }`}
               >
-                <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
-                  selected ? "border-forest bg-forest text-cream" : "border-line"
-                }`}>
-                  {selected && <Check size={10} strokeWidth={3} />}
-                </span>
+                {selected && <Check size={12} strokeWidth={3} />}
                 {service}
               </button>
             );
