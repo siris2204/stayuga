@@ -12,105 +12,164 @@
 # Error details
 
 ```
-Test timeout of 30000ms exceeded.
-```
+Error: expect(locator).toBeVisible() failed
 
-```
-Error: locator.click: Test timeout of 30000ms exceeded.
+Locator: getByRole('button', { name: /send enquiry/i })
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
 Call log:
-  - waiting for locator('a[href^=\'/properties/\']').first()
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for getByRole('button', { name: /send enquiry/i })
 
 ```
-
-# Page snapshot
 
 ```yaml
-- generic [ref=e1]:
-  - generic [active]:
-    - generic [ref=e4]:
-      - generic [ref=e5]:
-        - navigation [ref=e7]:
-          - button [disabled] [ref=e8]:
-            - img "previous" [ref=e9]
-          - generic [ref=e11]:
-            - generic [ref=e12]: 1/
-            - text: "1"
-          - button [disabled] [ref=e13]:
-            - img "next" [ref=e14]
-        - link "Next.js 16.2.10 (stale) Turbopack" [ref=e17] [cursor=pointer]:
-          - /url: https://nextjs.org/docs/messages/version-staleness
-          - generic "There is a newer version (16.3.0) available, upgrade recommended!" [ref=e20]: Next.js 16.2.10 (stale)
-          - generic [ref=e21]: Turbopack
-      - dialog "Runtime TypeError" [ref=e23]:
-        - generic [ref=e26]:
-          - generic [ref=e27]:
-            - generic [ref=e28]:
-              - generic [ref=e29]:
-                - generic [ref=e30]: Runtime TypeError
-                - generic [ref=e31]: Server
-              - generic [ref=e32]:
-                - button "Copy Error Info" [ref=e33] [cursor=pointer]
-                - button "No related documentation found" [disabled] [ref=e36]
-                - button "Attach Node.js inspector" [ref=e39] [cursor=pointer]
-            - generic [ref=e48]: fetch failed
-          - generic [ref=e50]:
-            - generic [ref=e51]:
-              - paragraph [ref=e53]:
-                - generic [ref=e59]: src\lib\api.ts (20:15) @ apiFetch
-                - button "Open in editor" [ref=e60] [cursor=pointer]
-              - generic [ref=e65]:
-                - generic [ref=e66]: "18 | const { token, headers, ...rest } = options;"
-                - generic [ref=e67]: 19 |
-                - generic [ref=e68]: "> 20 | const res = await fetch(`${API_URL}${path}`, {"
-                - generic [ref=e69]: "| ^"
-                - generic [ref=e70]: 21 | ...rest,
-                - generic [ref=e71]: "22 | headers: {"
-                - generic [ref=e72]: "23 | ...(rest.body ? { \"Content-Type\": \"application/json\" } : {}),"
-            - generic [ref=e73]:
-              - generic [ref=e74]:
-                - paragraph [ref=e75]:
-                  - text: Call Stack
-                  - generic [ref=e76]: "8"
-                - button "Show 5 ignore-listed frame(s)" [ref=e77] [cursor=pointer]
-              - generic [ref=e80]:
-                - generic [ref=e81]:
-                  - text: apiFetch
-                  - button "Open apiFetch in editor" [ref=e82] [cursor=pointer]
-                - text: src\lib\api.ts (20:15)
-              - generic [ref=e85]:
-                - generic [ref=e86]:
-                  - text: getProperties
-                  - button "Open getProperties in editor" [ref=e87] [cursor=pointer]
-                - text: src\lib\data.ts (6:26)
-              - generic [ref=e90]:
-                - generic [ref=e91]:
-                  - text: PropertiesPage
-                  - button "Open PropertiesPage in editor" [ref=e92] [cursor=pointer]
-                - text: src\app\properties\page.tsx (33:22)
-            - generic [ref=e95]:
-              - generic [ref=e96]: "Caused by: AggregateError"
-              - paragraph [ref=e98]: An error occurred in the Server Components render but no message was provided
-              - generic [ref=e100]:
-                - paragraph [ref=e101]:
-                  - text: Call Stack
-                  - generic [ref=e102]: "14"
-                - button "Show 14 ignore-listed frame(s)" [ref=e103] [cursor=pointer]
-        - generic [ref=e106]: "1"
-        - generic [ref=e107]: "2"
-    - generic [ref=e112] [cursor=pointer]:
-      - button "Open Next.js Dev Tools" [ref=e113]
-      - generic [ref=e117]:
-        - button "Open issues overlay" [ref=e118]:
-          - generic [ref=e119]:
-            - generic [ref=e120]: "0"
-            - generic [ref=e121]: "1"
-          - generic [ref=e122]: Issue
-        - button "Collapse issues badge" [ref=e123]
-  - generic [ref=e127]:
-    - heading "This page couldn’t load" [level=1] [ref=e130]
-    - paragraph [ref=e131]: A server error occurred. Reload to try again.
-    - button "Reload" [ref=e134] [cursor=pointer]
-  - paragraph [ref=e135]: ERROR 214032834
+- banner:
+  - link "Stayuga":
+    - /url: /
+  - navigation:
+    - link "Properties":
+      - /url: /properties
+    - link "Experiences":
+      - /url: /experiences
+    - link "About":
+      - /url: /about
+    - link "FAQ":
+      - /url: /faq
+    - link "Contact":
+      - /url: /contact
+  - link "Book a stay":
+    - /url: /properties
+- main:
+  - paragraph: Our collection
+  - heading "Villas & farmhouses" [level=2]
+  - paragraph: Every property is personally vetted for design, comfort, and setting.
+  - complementary:
+    - text: Filters Dates
+    - paragraph: Check-in
+    - paragraph: —
+    - paragraph: Check-out
+    - paragraph: —
+    - button "Previous month" [disabled]
+    - text: August 2026
+    - button "Next month"
+    - text: Su Mo Tu We Th Fr Sa
+    - button "1" [disabled]
+    - button "2" [disabled]
+    - button "3" [disabled]
+    - button "4" [disabled]
+    - button "5" [disabled]
+    - button "6" [disabled]
+    - button "7" [disabled]
+    - button "8" [disabled]
+    - button "9" [disabled]
+    - button "10" [disabled]
+    - button "11"
+    - button "12"
+    - button "13"
+    - button "14"
+    - button "15"
+    - button "16"
+    - button "17"
+    - button "18"
+    - button "19"
+    - button "20"
+    - button "21"
+    - button "22"
+    - button "23"
+    - button "24"
+    - button "25"
+    - button "26"
+    - button "27"
+    - button "28"
+    - button "29"
+    - button "30"
+    - button "31"
+    - separator
+    - paragraph: Property type
+    - radio "All types"
+    - text: All types
+    - radio "Villa"
+    - text: Villa
+    - radio "Farmhouse"
+    - text: Farmhouse
+    - separator
+    - text: City / Location
+    - textbox "e.g. Kasauli"
+    - separator
+    - text: Minimum guests
+    - spinbutton "e.g. 10"
+    - button "Apply filters"
+  - paragraph: 3 properties found
+  - link "Meadow House Farmstay farmhouse Karjat, Maharashtra Meadow House Farmstay Open meadows, mango orchards, and quiet mornings 16 guests 5 beds ₹18,000 per night":
+    - /url: /properties/meadow-house-farmstay
+    - img "Meadow House Farmstay"
+    - text: farmhouse
+    - paragraph: Karjat, Maharashtra
+    - heading "Meadow House Farmstay" [level=3]
+    - paragraph: Open meadows, mango orchards, and quiet mornings
+    - text: 16 guests 5 beds ₹18,000 per night
+  - link "Blue Lagoon Farmhouse farmhouse Sonipat, Haryana Blue Lagoon Farmhouse Lakeside farmhouse built for celebrations 24 guests 6 beds ₹32,000 per night":
+    - /url: /properties/blue-lagoon-farmhouse
+    - img "Blue Lagoon Farmhouse"
+    - text: farmhouse
+    - paragraph: Sonipat, Haryana
+    - heading "Blue Lagoon Farmhouse" [level=3]
+    - paragraph: Lakeside farmhouse built for celebrations
+    - text: 24 guests 6 beds ₹32,000 per night
+  - link "Ananta Villa villa Kasauli, Himachal Pradesh Ananta Villa A private hillside retreat above the valley 10 guests 4 beds ₹28,000 per night":
+    - /url: /properties/ananta-villa
+    - img "Ananta Villa"
+    - text: villa
+    - paragraph: Kasauli, Himachal Pradesh
+    - heading "Ananta Villa" [level=3]
+    - paragraph: A private hillside retreat above the valley
+    - text: 10 guests 4 beds ₹28,000 per night
+- contentinfo:
+  - paragraph: Stayuga
+  - paragraph: Curated stays where nature, comfort, and memories meet.
+  - img
+  - img
+  - img
+  - paragraph: Explore
+  - list:
+    - listitem:
+      - link "Properties":
+        - /url: /properties
+    - listitem:
+      - link "Experiences":
+        - /url: /experiences
+    - listitem:
+      - link "About Us":
+        - /url: /about
+    - listitem:
+      - link "Contact":
+        - /url: /contact
+  - paragraph: Support
+  - list:
+    - listitem:
+      - link "FAQ":
+        - /url: /faq
+    - listitem:
+      - link "Terms & Conditions":
+        - /url: /policies/terms
+    - listitem:
+      - link "Privacy Policy":
+        - /url: /policies/privacy
+    - listitem:
+      - link "Cancellation Policy":
+        - /url: /policies/cancellation
+  - paragraph: Get in touch
+  - list:
+    - listitem: hello@stayuga.com
+    - listitem: +91 00000 00000
+  - paragraph: © 2026 Stayuga. All rights reserved.
+  - paragraph: Handpicked villas & farmhouses across India.
+- link "Chat with us on WhatsApp":
+  - /url: https://wa.me/?text=Hi%20Stayuga%2C%20I'd%20like%20to%20know%20more%20about%20your%20properties.
+- alert
 ```
 
 # Test source
@@ -142,12 +201,12 @@ Call log:
   24 |     // Navigate to properties list and open the first property
   25 |     await page.goto("/properties");
   26 |     const firstCard = page.locator("a[href^='/properties/']").first();
-> 27 |     await firstCard.click();
-     |                     ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  27 |     await firstCard.click();
   28 |     await page.waitForLoadState("networkidle");
   29 | 
   30 |     // Check enquiry form is present
-  31 |     await expect(page.getByRole("button", { name: /send enquiry/i })).toBeVisible();
+> 31 |     await expect(page.getByRole("button", { name: /send enquiry/i })).toBeVisible();
+     |                                                                       ^ Error: expect(locator).toBeVisible() failed
   32 |   });
   33 | 
   34 |   test("Send enquiry is disabled when required fields are empty", async ({ page }) => {

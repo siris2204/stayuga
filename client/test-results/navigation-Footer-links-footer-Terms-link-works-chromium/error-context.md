@@ -7,113 +7,156 @@
 # Test info
 
 - Name: navigation.spec.ts >> Footer links >> footer Terms link works
-- Location: tests\e2e\navigation.spec.ts:64:7
+- Location: tests\e2e\navigation.spec.ts:61:7
 
 # Error details
 
 ```
-Test timeout of 30000ms exceeded.
-```
+Error: expect(page).toHaveURL(expected) failed
 
-```
-Error: locator.click: Test timeout of 30000ms exceeded.
+Expected: "http://localhost:3000/policies/terms"
+Received: "http://localhost:3000/"
+Timeout:  5000ms
+
 Call log:
-  - waiting for getByRole('contentinfo').getByRole('link', { name: /terms/i })
+  - Expect "toHaveURL" with timeout 5000ms
+    12 × locator resolved to <html lang="en" class="inter_98bb7a87-module__Nw7vRW__variable playfair_display_a2a8abc9-module__SQEMyG__variable h-full antialiased">…</html>
+       - unexpected value "http://localhost:3000/"
 
 ```
-
-# Page snapshot
 
 ```yaml
-- generic [ref=e1]:
-  - generic [active]:
-    - generic [ref=e4]:
-      - generic [ref=e5]:
-        - navigation [ref=e7]:
-          - button [disabled] [ref=e8]:
-            - img "previous" [ref=e9]
-          - generic [ref=e11]:
-            - generic [ref=e12]: 1/
-            - text: "1"
-          - button [disabled] [ref=e13]:
-            - img "next" [ref=e14]
-        - link "Next.js 16.2.10 (stale) Turbopack" [ref=e17] [cursor=pointer]:
-          - /url: https://nextjs.org/docs/messages/version-staleness
-          - generic "There is a newer version (16.3.0) available, upgrade recommended!" [ref=e20]: Next.js 16.2.10 (stale)
-          - generic [ref=e21]: Turbopack
-      - dialog "Runtime TypeError" [ref=e23]:
-        - generic [ref=e26]:
-          - generic [ref=e27]:
-            - generic [ref=e28]:
-              - generic [ref=e29]:
-                - generic [ref=e30]: Runtime TypeError
-                - generic [ref=e31]: Server
-              - generic [ref=e32]:
-                - button "Copy Error Info" [ref=e33] [cursor=pointer]
-                - button "No related documentation found" [disabled] [ref=e36]
-                - button "Attach Node.js inspector" [ref=e39] [cursor=pointer]
-            - generic [ref=e48]: fetch failed
-          - generic [ref=e50]:
-            - generic [ref=e51]:
-              - paragraph [ref=e53]:
-                - generic [ref=e59]: src\lib\api.ts (20:15) @ apiFetch
-                - button "Open in editor" [ref=e60] [cursor=pointer]
-              - generic [ref=e65]:
-                - generic [ref=e66]: "18 | const { token, headers, ...rest } = options;"
-                - generic [ref=e67]: 19 |
-                - generic [ref=e68]: "> 20 | const res = await fetch(`${API_URL}${path}`, {"
-                - generic [ref=e69]: "| ^"
-                - generic [ref=e70]: 21 | ...rest,
-                - generic [ref=e71]: "22 | headers: {"
-                - generic [ref=e72]: "23 | ...(rest.body ? { \"Content-Type\": \"application/json\" } : {}),"
-            - generic [ref=e73]:
-              - generic [ref=e74]:
-                - paragraph [ref=e75]:
-                  - text: Call Stack
-                  - generic [ref=e76]: "9"
-                - button "Show 5 ignore-listed frame(s)" [ref=e77] [cursor=pointer]
-              - generic [ref=e80]:
-                - generic [ref=e81]:
-                  - text: apiFetch
-                  - button "Open apiFetch in editor" [ref=e82] [cursor=pointer]
-                - text: src\lib\api.ts (20:15)
-              - generic [ref=e85]:
-                - generic [ref=e86]:
-                  - text: getProperties
-                  - button "Open getProperties in editor" [ref=e87] [cursor=pointer]
-                - text: src\lib\data.ts (6:26)
-              - generic [ref=e90]:
-                - generic [ref=e91]: Promise.all
-                - text: <anonymous>
-              - generic [ref=e92]:
-                - generic [ref=e93]:
-                  - text: Home
-                  - button "Open Home in editor" [ref=e94] [cursor=pointer]
-                - text: src\app\page.tsx (10:46)
-            - generic [ref=e97]:
-              - generic [ref=e98]: "Caused by: AggregateError"
-              - paragraph [ref=e100]: An error occurred in the Server Components render but no message was provided
-              - generic [ref=e102]:
-                - paragraph [ref=e103]:
-                  - text: Call Stack
-                  - generic [ref=e104]: "14"
-                - button "Show 14 ignore-listed frame(s)" [ref=e105] [cursor=pointer]
-        - generic [ref=e108]: "1"
-        - generic [ref=e109]: "2"
-    - generic [ref=e114] [cursor=pointer]:
-      - button "Open Next.js Dev Tools" [ref=e115]
-      - generic [ref=e119]:
-        - button "Open issues overlay" [ref=e120]:
-          - generic [ref=e121]:
-            - generic [ref=e122]: "0"
-            - generic [ref=e123]: "1"
-          - generic [ref=e124]: Issue
-        - button "Collapse issues badge" [ref=e125]
-  - generic [ref=e129]:
-    - heading "This page couldn’t load" [level=1] [ref=e132]
-    - paragraph [ref=e133]: A server error occurred. Reload to try again.
-    - button "Reload" [ref=e136] [cursor=pointer]
-  - paragraph [ref=e137]: ERROR 2664063083
+- banner:
+  - link "Stayuga":
+    - /url: /
+  - navigation:
+    - link "Properties":
+      - /url: /properties
+    - link "Experiences":
+      - /url: /experiences
+    - link "About":
+      - /url: /about
+    - link "FAQ":
+      - /url: /faq
+    - link "Contact":
+      - /url: /contact
+  - link "Book a stay":
+    - /url: /properties
+- main:
+  - img "A luxury villa surrounded by hills at golden hour"
+  - paragraph: Handpicked villas & farmhouses
+  - heading "Curated stays where nature, comfort, and memories meet" [level=1]
+  - paragraph: Handpicked villas and farmhouses for the moments worth slowing down for.
+  - link "Explore properties":
+    - /url: /properties
+  - link "View experiences":
+    - /url: /experiences
+  - paragraph: Why Stayuga
+  - heading "Hospitality, considered" [level=2]
+  - heading "Handpicked Premium Stays" [level=3]
+  - paragraph: Every villa and farmhouse is personally visited and vetted before it joins our portfolio.
+  - heading "Exceptional Guest Experience" [level=3]
+  - paragraph: From the first enquiry to check-out, our team is on hand to make every detail effortless.
+  - heading "Expertly Trained Staff" [level=3]
+  - paragraph: On-ground caretakers and chefs trained to deliver warm, attentive hospitality.
+  - heading "Memories, Not Just Stays" [level=3]
+  - paragraph: Thoughtfully designed spaces and experiences built for the moments worth remembering.
+  - paragraph: Featured
+  - heading "A few of our favourite escapes" [level=2]
+  - link "View all properties":
+    - /url: /properties
+  - link "Meadow House Farmstay farmhouse Karjat, Maharashtra Meadow House Farmstay Open meadows, mango orchards, and quiet mornings 16 guests 5 beds ₹18,000 per night":
+    - /url: /properties/meadow-house-farmstay
+    - img "Meadow House Farmstay"
+    - text: farmhouse
+    - paragraph: Karjat, Maharashtra
+    - heading "Meadow House Farmstay" [level=3]
+    - paragraph: Open meadows, mango orchards, and quiet mornings
+    - text: 16 guests 5 beds ₹18,000 per night
+  - link "Ananta Villa villa Kasauli, Himachal Pradesh Ananta Villa A private hillside retreat above the valley 10 guests 4 beds ₹28,000 per night":
+    - /url: /properties/ananta-villa
+    - img "Ananta Villa"
+    - text: villa
+    - paragraph: Kasauli, Himachal Pradesh
+    - heading "Ananta Villa" [level=3]
+    - paragraph: A private hillside retreat above the valley
+    - text: 10 guests 4 beds ₹28,000 per night
+  - paragraph: Experiences
+  - heading "Retreats, events & celebrations" [level=2]
+  - link "View all experiences":
+    - /url: /experiences
+  - img "Full Moon Wellness Retreat"
+  - text: retreat
+  - heading "Full Moon Wellness Retreat" [level=3]
+  - paragraph: A guided two-day wellness retreat at Ananta Villa featuring sunrise yoga, sound healing, and a curated slow-food menu under the stars.
+  - paragraph: Ananta Villa, Kasauli
+  - paragraph: Monthly, on the weekend nearest the full moon
+  - img "Harvest Table Dinner"
+  - text: event
+  - heading "Harvest Table Dinner" [level=3]
+  - paragraph: A long-table farm dinner at Meadow House Farmstay, celebrating the orchard's seasonal harvest with a multi-course menu and live acoustic music.
+  - paragraph: Meadow House Farmstay, Karjat
+  - paragraph: Seasonal — announced quarterly
+  - paragraph: Guest stories
+  - heading "What our guests remember" [level=2]
+  - figure "Ritika & Arjun — Ananta Villa, Kasauli":
+    - blockquote: “Every detail felt considered — from the welcome hamper to the sunset views. It didn't feel like a rental, it felt like a home we'd always had.”
+    - text: Ritika & Arjun — Ananta Villa, Kasauli
+  - figure "Meera S. — Blue Lagoon Farmhouse":
+    - blockquote: “We hosted our anniversary dinner at Blue Lagoon and the team handled everything effortlessly. Genuinely the most relaxed we've been planning an event.”
+    - text: Meera S. — Blue Lagoon Farmhouse
+  - figure "Kunal D. — Meadow House Farmstay":
+    - blockquote: “The orchard breakfast alone was worth the trip. Beautifully kept property and a caretaker who anticipated everything we needed.”
+    - text: Kunal D. — Meadow House Farmstay
+  - heading "Ready to plan your escape?" [level=2]
+  - paragraph: Tell us your dates and headcount — our team will help you find the right villa or farmhouse and take care of the rest.
+  - link "Browse properties":
+    - /url: /properties
+  - link "Talk to our team":
+    - /url: /contact
+- contentinfo:
+  - paragraph: Stayuga
+  - paragraph: Curated stays where nature, comfort, and memories meet.
+  - img
+  - img
+  - img
+  - paragraph: Explore
+  - list:
+    - listitem:
+      - link "Properties":
+        - /url: /properties
+    - listitem:
+      - link "Experiences":
+        - /url: /experiences
+    - listitem:
+      - link "About Us":
+        - /url: /about
+    - listitem:
+      - link "Contact":
+        - /url: /contact
+  - paragraph: Support
+  - list:
+    - listitem:
+      - link "FAQ":
+        - /url: /faq
+    - listitem:
+      - link "Terms & Conditions":
+        - /url: /policies/terms
+    - listitem:
+      - link "Privacy Policy":
+        - /url: /policies/privacy
+    - listitem:
+      - link "Cancellation Policy":
+        - /url: /policies/cancellation
+  - paragraph: Get in touch
+  - list:
+    - listitem: hello@stayuga.com
+    - listitem: +91 00000 00000
+  - paragraph: © 2026 Stayuga. All rights reserved.
+  - paragraph: Handpicked villas & farmhouses across India.
+- link "Chat with us on WhatsApp":
+  - /url: https://wa.me/?text=Hi%20Stayuga%2C%20I'd%20like%20to%20know%20more%20about%20your%20properties.
+- alert
 ```
 
 # Test source
@@ -124,79 +167,76 @@ Call log:
   3  | test.describe("Header navigation", () => {
   4  |   test.beforeEach(async ({ page }) => {
   5  |     await page.goto("/");
-  6  |   });
-  7  | 
-  8  |   test("logo links to homepage", async ({ page }) => {
-  9  |     await page.getByRole("link", { name: /stayuga/i }).first().click();
-  10 |     await expect(page).toHaveURL("/");
-  11 |   });
-  12 | 
-  13 |   test("Properties nav link navigates correctly", async ({ page }) => {
-  14 |     await page.getByRole("link", { name: "Properties" }).first().click();
-  15 |     await expect(page).toHaveURL("/properties");
-  16 |   });
-  17 | 
-  18 |   test("Experiences nav link navigates correctly", async ({ page }) => {
-  19 |     await page.getByRole("link", { name: "Experiences" }).first().click();
-  20 |     await expect(page).toHaveURL("/experiences");
-  21 |   });
-  22 | 
-  23 |   test("About nav link navigates correctly", async ({ page }) => {
-  24 |     await page.getByRole("link", { name: "About" }).first().click();
-  25 |     await expect(page).toHaveURL("/about");
-  26 |   });
-  27 | 
-  28 |   test("FAQ nav link navigates correctly", async ({ page }) => {
-  29 |     await page.getByRole("link", { name: "FAQ" }).first().click();
-  30 |     await expect(page).toHaveURL("/faq");
-  31 |   });
-  32 | 
-  33 |   test("Contact nav link navigates correctly", async ({ page }) => {
-  34 |     await page.getByRole("link", { name: "Contact" }).first().click();
-  35 |     await expect(page).toHaveURL("/contact");
-  36 |   });
-  37 | 
-  38 |   test("Book a stay CTA button navigates to properties", async ({ page }) => {
-  39 |     await page.getByRole("link", { name: /book a stay/i }).first().click();
-  40 |     await expect(page).toHaveURL("/properties");
-  41 |   });
-  42 | });
-  43 | 
-  44 | test.describe("Footer links", () => {
-  45 |   test.beforeEach(async ({ page }) => {
-  46 |     await page.goto("/");
-  47 |   });
-  48 | 
-  49 |   test("footer Properties link works", async ({ page }) => {
-  50 |     await page.getByRole("contentinfo").getByRole("link", { name: "Properties" }).click();
-  51 |     await expect(page).toHaveURL("/properties");
-  52 |   });
-  53 | 
-  54 |   test("footer Experiences link works", async ({ page }) => {
-  55 |     await page.getByRole("contentinfo").getByRole("link", { name: "Experiences" }).click();
-  56 |     await expect(page).toHaveURL("/experiences");
-  57 |   });
-  58 | 
-  59 |   test("footer FAQ link works", async ({ page }) => {
-  60 |     await page.getByRole("contentinfo").getByRole("link", { name: "FAQ" }).click();
-  61 |     await expect(page).toHaveURL("/faq");
-  62 |   });
-  63 | 
-  64 |   test("footer Terms link works", async ({ page }) => {
-> 65 |     await page.getByRole("contentinfo").getByRole("link", { name: /terms/i }).click();
-     |                                                                               ^ Error: locator.click: Test timeout of 30000ms exceeded.
-  66 |     await expect(page).toHaveURL("/policies/terms");
-  67 |   });
-  68 | 
-  69 |   test("footer Privacy link works", async ({ page }) => {
-  70 |     await page.getByRole("contentinfo").getByRole("link", { name: /privacy/i }).click();
-  71 |     await expect(page).toHaveURL("/policies/privacy");
-  72 |   });
-  73 | 
-  74 |   test("footer Cancellation link works", async ({ page }) => {
-  75 |     await page.getByRole("contentinfo").getByRole("link", { name: /cancellation/i }).click();
-  76 |     await expect(page).toHaveURL("/policies/cancellation");
-  77 |   });
-  78 | });
-  79 | 
+  6  |     await page.waitForLoadState("networkidle");
+  7  |   });
+  8  | 
+  9  |   test("Properties nav link navigates correctly", async ({ page }) => {
+  10 |     await page.getByRole("navigation").getByRole("link", { name: /^properties$/i }).click();
+  11 |     await expect(page).toHaveURL("/properties");
+  12 |   });
+  13 | 
+  14 |   test("Experiences nav link navigates correctly", async ({ page }) => {
+  15 |     await page.getByRole("navigation").getByRole("link", { name: /^experiences$/i }).click();
+  16 |     await expect(page).toHaveURL("/experiences");
+  17 |   });
+  18 | 
+  19 |   test("About nav link navigates correctly", async ({ page }) => {
+  20 |     await page.getByRole("navigation").getByRole("link", { name: /^about$/i }).click();
+  21 |     await expect(page).toHaveURL("/about");
+  22 |   });
+  23 | 
+  24 |   test("FAQ nav link navigates correctly", async ({ page }) => {
+  25 |     await page.getByRole("navigation").getByRole("link", { name: /^faq$/i }).click();
+  26 |     await expect(page).toHaveURL("/faq");
+  27 |   });
+  28 | 
+  29 |   test("Contact nav link navigates correctly", async ({ page }) => {
+  30 |     await page.getByRole("navigation").getByRole("link", { name: /^contact$/i }).click();
+  31 |     await expect(page).toHaveURL("/contact");
+  32 |   });
+  33 | 
+  34 |   test("Book a stay CTA button navigates to properties", async ({ page }) => {
+  35 |     await page.getByRole("link", { name: /book a stay/i }).first().click();
+  36 |     await expect(page).toHaveURL("/properties");
+  37 |   });
+  38 | });
+  39 | 
+  40 | test.describe("Footer links", () => {
+  41 |   test.beforeEach(async ({ page }) => {
+  42 |     await page.goto("/");
+  43 |     await page.waitForLoadState("networkidle");
+  44 |   });
+  45 | 
+  46 |   test("footer Properties link works", async ({ page }) => {
+  47 |     await page.getByRole("contentinfo").getByRole("link", { name: /^properties$/i }).click();
+  48 |     await expect(page).toHaveURL("/properties");
+  49 |   });
+  50 | 
+  51 |   test("footer Experiences link works", async ({ page }) => {
+  52 |     await page.getByRole("contentinfo").getByRole("link", { name: /^experiences$/i }).click();
+  53 |     await expect(page).toHaveURL("/experiences");
+  54 |   });
+  55 | 
+  56 |   test("footer FAQ link works", async ({ page }) => {
+  57 |     await page.getByRole("contentinfo").getByRole("link", { name: /^faq$/i }).click();
+  58 |     await expect(page).toHaveURL("/faq");
+  59 |   });
+  60 | 
+  61 |   test("footer Terms link works", async ({ page }) => {
+  62 |     await page.getByRole("contentinfo").getByRole("link", { name: /terms/i }).click();
+> 63 |     await expect(page).toHaveURL("/policies/terms");
+     |                        ^ Error: expect(page).toHaveURL(expected) failed
+  64 |   });
+  65 | 
+  66 |   test("footer Privacy link works", async ({ page }) => {
+  67 |     await page.getByRole("contentinfo").getByRole("link", { name: /privacy/i }).click();
+  68 |     await expect(page).toHaveURL("/policies/privacy");
+  69 |   });
+  70 | 
+  71 |   test("footer Cancellation link works", async ({ page }) => {
+  72 |     await page.getByRole("contentinfo").getByRole("link", { name: /cancellation/i }).click();
+  73 |     await expect(page).toHaveURL("/policies/cancellation");
+  74 |   });
+  75 | });
+  76 | 
 ```

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const { blocks } = await getContent();
+  const { blocks } = await getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] }));
   const contact = blocks["contact-info"] ?? {
     email: "hello@stayuga.com",
     phone: "+91 00000 00000",

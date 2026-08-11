@@ -6,100 +6,29 @@
 
 # Test info
 
-- Name: admin.spec.ts >> Admin properties >> New property form has Save draft and Publish buttons
-- Location: tests\e2e\admin.spec.ts:90:7
+- Name: admin.spec.ts >> Admin login >> Sign in button is disabled while request is in-flight
+- Location: tests\e2e\admin.spec.ts:16:7
 
 # Error details
 
 ```
-Error: expect(locator).toBeVisible() failed
+Error: expect(locator).toBeDisabled() failed
 
-Locator: getByRole('button', { name: /save draft/i })
-Expected: visible
-Timeout: 5000ms
-Error: element(s) not found
+Locator:  getByRole('button', { name: /sign in/i })
+Expected: disabled
+Received: enabled
+Timeout:  5000ms
 
 Call log:
-  - Expect "toBeVisible" with timeout 5000ms
-  - waiting for getByRole('button', { name: /save draft/i })
+  - Expect "toBeDisabled" with timeout 5000ms
+  - waiting for getByRole('button', { name: /sign in/i })
+    3 × locator resolved to <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium tracking-wide transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none bg-forest text-cream hover:bg-forest-light w-full">Sign in</button>
+      - unexpected value "enabled"
 
 ```
 
 ```yaml
-- main:
-  - complementary:
-    - paragraph: Stayuga
-    - paragraph: Admin panel
-    - navigation:
-      - link "Dashboard":
-        - /url: /admin/dashboard
-      - link "Properties":
-        - /url: /admin/properties
-      - link "Bookings":
-        - /url: /admin/bookings
-      - link "Leads":
-        - /url: /admin/leads
-      - link "Owners":
-        - /url: /admin/owners
-      - link "Content":
-        - /url: /admin/content
-    - paragraph: admin@stayuga.com
-    - button "Log out"
-  - heading "New property" [level=1]
-  - paragraph: Add a new villa or farmhouse listing.
-  - heading "Property details" [level=3]
-  - text: Title
-  - textbox "Title"
-  - text: Slug (optional — auto-generated from title)
-  - textbox "Slug (optional — auto-generated from title)"
-  - text: Type
-  - combobox "Type":
-    - option "Villa" [selected]
-    - option "Farmhouse"
-  - text: Status
-  - combobox "Status":
-    - option "Published" [selected]
-    - option "Draft"
-  - text: Tagline
-  - textbox "Tagline"
-  - text: Description
-  - textbox "Description"
-  - text: Amenities (comma separated)
-  - textbox "Amenities (comma separated)":
-    - /placeholder: Private pool, Wi-Fi, Bonfire deck
-  - checkbox "Feature on homepage"
-  - text: Feature on homepage
-  - heading "Images" [level=3]
-  - button "Choose File"
-  - heading "Location" [level=3]
-  - text: Address
-  - textbox "Address"
-  - text: City
-  - textbox "City"
-  - text: State
-  - textbox "State"
-  - text: Google Maps embed URL (optional)
-  - textbox "Google Maps embed URL (optional)":
-    - /placeholder: https://www.google.com/maps?q=...&output=embed
-  - heading "Pricing" [level=3]
-  - text: Base price / night
-  - spinbutton "Base price / night"
-  - text: Weekend price (optional)
-  - spinbutton "Weekend price (optional)"
-  - text: Currency
-  - combobox "Currency":
-    - option "INR — Indian Rupee" [selected]
-    - option "USD — US Dollar"
-    - option "EUR — Euro"
-  - heading "Capacity" [level=3]
-  - text: Max guests
-  - spinbutton "Max guests"
-  - text: Bedrooms
-  - spinbutton "Bedrooms"
-  - text: Bathrooms
-  - spinbutton "Bathrooms"
-  - button "Create property"
-- alert
+- button "Sign in"
 ```
 
 # Test source
@@ -134,7 +63,8 @@ Call log:
   27  |     const requestPromise = page.waitForRequest(/\/api\/auth\/login$/);
   28  |     await btn.click();
   29  |     await requestPromise;
-  30  |     await expect(btn).toBeDisabled();
+> 30  |     await expect(btn).toBeDisabled();
+      |                       ^ Error: expect(locator).toBeDisabled() failed
   31  |   });
   32  | 
   33  |   test("Shows error on invalid credentials", async ({ page }) => {
@@ -196,8 +126,7 @@ Call log:
   89  | 
   90  |   test("New property form has Save draft and Publish buttons", async ({ page }) => {
   91  |     await page.goto("/admin/properties/new");
-> 92  |     await expect(page.getByRole("button", { name: /save draft/i })).toBeVisible();
-      |                                                                     ^ Error: expect(locator).toBeVisible() failed
+  92  |     await expect(page.getByRole("button", { name: /save draft/i })).toBeVisible();
   93  |     await expect(page.getByRole("button", { name: /publish/i })).toBeVisible();
   94  |   });
   95  | 
@@ -236,46 +165,4 @@ Call log:
   128 | 
   129 |   test("About page Save button is visible", async ({ page }) => {
   130 |     const aboutSection = page.locator("section").filter({ hasText: /about page/i });
-  131 |     await expect(aboutSection.getByRole("button", { name: /save/i })).toBeVisible();
-  132 |   });
-  133 | 
-  134 |   test("Add review button is visible", async ({ page }) => {
-  135 |     await expect(page.getByRole("button", { name: /add review/i })).toBeVisible();
-  136 |   });
-  137 | 
-  138 |   test("Add FAQ button is visible", async ({ page }) => {
-  139 |     await expect(page.getByRole("button", { name: /add faq/i })).toBeVisible();
-  140 |   });
-  141 | 
-  142 |   test("Policy page Save buttons are visible", async ({ page }) => {
-  143 |     const policySection = page.locator("section").filter({ hasText: /policy pages/i });
-  144 |     const saveBtns = policySection.getByRole("button", { name: /save/i });
-  145 |     await expect(saveBtns.first()).toBeVisible();
-  146 |   });
-  147 | });
-  148 | 
-  149 | test.describe("Admin owners", () => {
-  150 |   test.beforeEach(async ({ page }) => {
-  151 |     await loginAsAdmin(page);
-  152 |     await page.goto("/admin/owners");
-  153 |     await page.waitForLoadState("networkidle");
-  154 |   });
-  155 | 
-  156 |   test("Add owner button opens the create form", async ({ page }) => {
-  157 |     await page.getByRole("button", { name: /add owner/i }).click();
-  158 |     await expect(page.getByText(/new owner account/i)).toBeVisible();
-  159 |   });
-  160 | 
-  161 |   test("X button on create form closes it", async ({ page }) => {
-  162 |     await page.getByRole("button", { name: /add owner/i }).click();
-  163 |     await expect(page.getByText(/new owner account/i)).toBeVisible();
-  164 |     // The X close button is inside the form header
-  165 |     await page.locator("button[onClick]").filter({ hasText: "" }).last().click();
-  166 |     // Or target by finding button next to "New owner account" heading
-  167 |     const formHeader = page.getByText(/new owner account/i).locator("..");
-  168 |     await formHeader.getByRole("button").click();
-  169 |     await expect(page.getByText(/new owner account/i)).not.toBeVisible();
-  170 |   });
-  171 | });
-  172 | 
 ```

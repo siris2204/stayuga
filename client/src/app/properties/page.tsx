@@ -30,7 +30,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   if (params.checkIn) filters.checkIn = params.checkIn;
   if (params.checkOut) filters.checkOut = params.checkOut;
 
-  const properties = await getProperties(filters);
+  const properties = await getProperties(filters).catch(() => []);
 
   return (
     <div className="py-16">

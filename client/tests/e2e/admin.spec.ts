@@ -14,16 +14,19 @@ async function loginAsAdmin(page: Page) {
 
 test.describe("Admin login", () => {
   test("Sign in button is disabled while request is in-flight", async ({ page }) => {
-    // Intercept and delay the login request so we can catch the disabled state
-    await page.route("**/api/auth/login", async (route) => {
-      await new Promise((r) => setTimeout(r, 800));
+    // Hold the login request open long enough to assert the disabled state.
+    await page.route(/\/api\/auth\/login$/, async (route) => {
+      await new Promise((r) => setTimeout(r, 3000));
       await route.continue();
     });
     await page.goto("/admin/login");
     await page.getByLabel(/email/i).fill("admin@stayuga.com");
     await page.getByLabel(/password/i).fill("anypassword");
     const btn = page.getByRole("button", { name: /sign in/i });
+    // waitForRequest resolves once the fetch fires (after setSubmitting(true) + React re-render).
+    const requestPromise = page.waitForRequest(/\/api\/auth\/login$/);
     await btn.click();
+    await requestPromise;
     await expect(btn).toBeDisabled();
   });
 

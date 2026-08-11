@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function FaqPage() {
-  const { faqs } = await getContent();
+  const { faqs } = await getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] }));
 
   return (
     <div className="py-16">

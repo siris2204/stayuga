@@ -6,8 +6,8 @@
 
 # Test info
 
-- Name: admin.spec.ts >> Admin properties >> Add property button navigates to new property form
-- Location: tests\e2e\admin.spec.ts:85:7
+- Name: admin.spec.ts >> Admin owners >> X button on create form closes it
+- Location: tests\e2e\admin.spec.ts:161:7
 
 # Error details
 
@@ -18,14 +18,14 @@ Test timeout of 30000ms exceeded.
 ```
 Error: locator.click: Test timeout of 30000ms exceeded.
 Call log:
-  - waiting for getByRole('link', { name: /add property/i })
+  - waiting for locator('button[onClick]').last()
 
 ```
 
 # Page snapshot
 
 ```yaml
-- generic [active] [ref=f1e1]:
+- generic [ref=f1e1]:
   - main [ref=f1e2]:
     - generic [ref=f1e3]:
       - complementary [ref=f1e4]:
@@ -51,131 +51,54 @@ Call log:
       - generic [ref=f1e53]:
         - generic [ref=f1e54]:
           - generic [ref=f1e55]:
-            - heading "Properties" [level=1] [ref=f1e56]
-            - paragraph [ref=f1e57]: Manage your villa & farmhouse listings.
-          - link "New property" [ref=f1e58] [cursor=pointer]:
-            - /url: /admin/properties/new
-        - table [ref=f1e61]:
-          - rowgroup [ref=f1e62]:
-            - row [ref=f1e63]:
-              - columnheader "Title" [ref=f1e64]
-              - columnheader "Type" [ref=f1e65]
-              - columnheader "City" [ref=f1e66]
-              - columnheader "Price / night" [ref=f1e67]
-              - columnheader "Status" [ref=f1e68]
-              - columnheader "Featured on homepage" [ref=f1e69]
-              - columnheader "Actions" [ref=f1e72]
-          - rowgroup [ref=f1e73]:
-            - row [ref=f1e74]:
-              - cell "Meadow House Farmstay" [ref=f1e75]
-              - cell "farmhouse" [ref=f1e76]
-              - cell "Karjat" [ref=f1e77]
-              - cell "₹18,000" [ref=f1e78]
-              - cell "published" [ref=f1e79]
-              - cell [ref=f1e80]:
-                - button "Remove from homepage" [ref=f1e81]
-              - cell [ref=f1e84]:
-                - generic [ref=f1e85]:
-                  - link [ref=f1e86] [cursor=pointer]:
-                    - /url: /admin/properties/6a74a2af08a1d0329c4303b7/edit
-                  - button [ref=f1e90]
-            - row [ref=f1e94]:
-              - cell "Blue Lagoon Farmhouse" [ref=f1e95]
-              - cell "farmhouse" [ref=f1e96]
-              - cell "Sonipat" [ref=f1e97]
-              - cell "₹32,000" [ref=f1e98]
-              - cell "published" [ref=f1e99]
-              - cell [ref=f1e100]:
-                - button "Feature on homepage" [ref=f1e101]
-              - cell [ref=f1e104]:
-                - generic [ref=f1e105]:
-                  - link [ref=f1e106] [cursor=pointer]:
-                    - /url: /admin/properties/6a74a2af08a1d0329c4303b8/edit
-                  - button [ref=f1e110]
-            - row [ref=f1e114]:
-              - cell "Ananta Villa" [ref=f1e115]
-              - cell "villa" [ref=f1e116]
-              - cell "Kasauli" [ref=f1e117]
-              - cell "₹28,000" [ref=f1e118]
-              - cell "published" [ref=f1e119]
-              - cell [ref=f1e120]:
-                - button "Remove from homepage" [ref=f1e121]
-              - cell [ref=f1e124]:
-                - generic [ref=f1e125]:
-                  - link [ref=f1e126] [cursor=pointer]:
-                    - /url: /admin/properties/6a74a2af08a1d0329c4303b6/edit
-                  - button [ref=f1e130]
-  - button "Open Next.js Dev Tools" [ref=f1e139] [cursor=pointer]
-  - alert [ref=f1e143]
+            - heading "Property Owners" [level=1] [ref=f1e56]
+            - paragraph [ref=f1e57]: Create owner accounts and assign properties to them.
+          - button "Add owner" [active] [ref=f1e58]
+        - generic [ref=f1e60]:
+          - generic [ref=f1e61]:
+            - heading "New owner account" [level=3] [ref=f1e62]
+            - button [ref=f1e63]
+          - generic [ref=f1e67]:
+            - generic [ref=f1e68]:
+              - generic [ref=f1e69]: Name
+              - textbox "Name" [ref=f1e70]
+            - generic [ref=f1e71]:
+              - generic [ref=f1e72]: Email address
+              - textbox "Email address" [ref=f1e73]:
+                - /placeholder: owner@example.com
+            - generic [ref=f1e74]:
+              - generic [ref=f1e75]: Phone number
+              - textbox "Phone number" [ref=f1e76]:
+                - /placeholder: +91 98765 43210
+            - generic [ref=f1e77]:
+              - generic [ref=f1e78]: Password
+              - textbox "Password" [ref=f1e79]
+          - paragraph [ref=f1e80]: "* Provide at least an email or a phone number."
+          - generic [ref=f1e81]:
+            - paragraph [ref=f1e82]: Assign properties
+            - generic [ref=f1e83]:
+              - button "Meadow House Farmstay" [ref=f1e84]
+              - button "Blue Lagoon Farmhouse" [ref=f1e85]
+              - button "Ananta Villa" [ref=f1e86]
+          - button "Create owner" [disabled] [ref=f1e87]
+        - table [ref=f1e89]:
+          - rowgroup [ref=f1e90]:
+            - row [ref=f1e91]:
+              - columnheader "Name" [ref=f1e92]
+              - columnheader "Email" [ref=f1e93]
+              - columnheader "Phone" [ref=f1e94]
+              - columnheader "Properties" [ref=f1e95]
+              - columnheader "Actions" [ref=f1e96]
+          - rowgroup [ref=f1e97]:
+            - row [ref=f1e98]:
+              - cell "No owners yet." [ref=f1e99]
+  - button "Open Next.js Dev Tools" [ref=f1e105] [cursor=pointer]
+  - alert [ref=f1e109]
 ```
 
 # Test source
 
 ```ts
-  1   | import { test, expect, Page } from "@playwright/test";
-  2   | 
-  3   | const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@stayuga.com";
-  4   | const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "Stayuga@123";
-  5   | 
-  6   | async function loginAsAdmin(page: Page) {
-  7   |   await page.goto("/admin/login");
-  8   |   await page.waitForLoadState("networkidle");
-  9   |   await page.getByLabel(/email/i).fill(ADMIN_EMAIL);
-  10  |   await page.getByLabel(/password/i).fill(ADMIN_PASSWORD);
-  11  |   await page.getByRole("button", { name: /sign in/i }).click();
-  12  |   await page.waitForURL("/admin/dashboard");
-  13  | }
-  14  | 
-  15  | test.describe("Admin login", () => {
-  16  |   test("Sign in button is disabled while request is in-flight", async ({ page }) => {
-  17  |     // Hold the login request open long enough to assert the disabled state.
-  18  |     await page.route(/\/api\/auth\/login$/, async (route) => {
-  19  |       await new Promise((r) => setTimeout(r, 3000));
-  20  |       await route.continue();
-  21  |     });
-  22  |     await page.goto("/admin/login");
-  23  |     await page.getByLabel(/email/i).fill("admin@stayuga.com");
-  24  |     await page.getByLabel(/password/i).fill("anypassword");
-  25  |     const btn = page.getByRole("button", { name: /sign in/i });
-  26  |     // waitForRequest resolves once the fetch fires (after setSubmitting(true) + React re-render).
-  27  |     const requestPromise = page.waitForRequest(/\/api\/auth\/login$/);
-  28  |     await btn.click();
-  29  |     await requestPromise;
-  30  |     await expect(btn).toBeDisabled();
-  31  |   });
-  32  | 
-  33  |   test("Shows error on invalid credentials", async ({ page }) => {
-  34  |     await page.goto("/admin/login");
-  35  |     await page.getByLabel(/email/i).fill("wrong@example.com");
-  36  |     await page.getByLabel(/password/i).fill("wrongpassword");
-  37  |     await page.getByRole("button", { name: /sign in/i }).click();
-  38  |     await expect(page.getByText(/invalid|login failed/i)).toBeVisible();
-  39  |   });
-  40  | 
-  41  |   test("Valid credentials redirect to dashboard", async ({ page }) => {
-  42  |     await loginAsAdmin(page);
-  43  |     await expect(page).toHaveURL("/admin/dashboard");
-  44  |   });
-  45  | });
-  46  | 
-  47  | test.describe("Admin dashboard", () => {
-  48  |   test.beforeEach(async ({ page }) => {
-  49  |     await loginAsAdmin(page);
-  50  |   });
-  51  | 
-  52  |   test("Properties sidebar link navigates correctly", async ({ page }) => {
-  53  |     await page.getByRole("link", { name: /^properties$/i }).click();
-  54  |     await expect(page).toHaveURL("/admin/properties");
-  55  |   });
-  56  | 
-  57  |   test("Bookings sidebar link navigates correctly", async ({ page }) => {
-  58  |     await page.getByRole("link", { name: /^bookings$/i }).click();
-  59  |     await expect(page).toHaveURL("/admin/bookings");
-  60  |   });
-  61  | 
-  62  |   test("Owners sidebar link navigates correctly", async ({ page }) => {
-  63  |     await page.getByRole("link", { name: /^owners$/i }).click();
-  64  |     await expect(page).toHaveURL("/admin/owners");
   65  |   });
   66  | 
   67  |   test("Content sidebar link navigates correctly", async ({ page }) => {
@@ -197,8 +120,7 @@ Call log:
   83  |   });
   84  | 
   85  |   test("Add property button navigates to new property form", async ({ page }) => {
-> 86  |     await page.getByRole("link", { name: /add property/i }).click();
-      |                                                             ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  86  |     await page.getByRole("link", { name: /add property/i }).click();
   87  |     await expect(page).toHaveURL("/admin/properties/new");
   88  |   });
   89  | 
@@ -277,7 +199,8 @@ Call log:
   162 |     await page.getByRole("button", { name: /add owner/i }).click();
   163 |     await expect(page.getByText(/new owner account/i)).toBeVisible();
   164 |     // The X close button is inside the form header
-  165 |     await page.locator("button[onClick]").filter({ hasText: "" }).last().click();
+> 165 |     await page.locator("button[onClick]").filter({ hasText: "" }).last().click();
+      |                                                                          ^ Error: locator.click: Test timeout of 30000ms exceeded.
   166 |     // Or target by finding button next to "New owner account" heading
   167 |     const formHeader = page.getByText(/new owner account/i).locator("..");
   168 |     await formHeader.getByRole("button").click();

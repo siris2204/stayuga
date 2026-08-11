@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const { blocks } = await getContent();
+  const { blocks } = await getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] }));
   const mission = blocks["about-mission"] ?? {
     heading: "Our mission",
     body: "Stayuga curates a small, handpicked portfolio of luxury villas and farmhouses, each personally vetted for design, service, and setting.",

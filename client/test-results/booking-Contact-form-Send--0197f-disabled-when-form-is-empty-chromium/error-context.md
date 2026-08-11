@@ -14,23 +14,21 @@
 ```
 Error: expect(locator).toBeDisabled() failed
 
-Locator: getByRole('button', { name: /send message/i })
+Locator:  getByRole('button', { name: /send message/i })
 Expected: disabled
-Timeout: 5000ms
-Error: element(s) not found
+Received: enabled
+Timeout:  5000ms
 
 Call log:
   - Expect "toBeDisabled" with timeout 5000ms
   - waiting for getByRole('button', { name: /send message/i })
+    13 × locator resolved to <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium tracking-wide transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none bg-forest text-cream hover:bg-forest-light w-full sm:w-auto">Send message</button>
+       - unexpected value "enabled"
 
 ```
 
 ```yaml
-- img
-- heading "This page couldn’t load" [level=1]
-- paragraph: A server error occurred. Reload to try again.
-- button "Reload"
-- paragraph: ERROR 4170523826
+- button "Send message"
 ```
 
 # Test source

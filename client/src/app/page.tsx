@@ -8,9 +8,9 @@ import { CtaSection } from "@/components/home/CtaSection";
 
 export default async function Home() {
   const [properties, experiences, content] = await Promise.all([
-    getProperties({ featured: "true" }),
-    getExperiences(),
-    getContent(),
+    getProperties({ featured: "true" }).catch(() => []),
+    getExperiences().catch(() => []),
+    getContent().catch(() => ({ blocks: {}, faqs: [], policies: [], testimonials: [] })),
   ]);
 
   const hero = content.blocks["homepage-hero"] ?? {

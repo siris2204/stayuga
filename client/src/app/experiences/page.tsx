@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ExperiencesPage() {
-  const experiences = await getExperiences();
+  const experiences = await getExperiences().catch(() => []);
 
   return (
     <div className="py-16">

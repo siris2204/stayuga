@@ -1,8 +1,6 @@
-import path from "path";
 import { defineConfig, devices } from "@playwright/test";
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
-const isCI = !!process.env.PLAYWRIGHT_BASE_URL;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -17,13 +15,15 @@ export default defineConfig({
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],
-  // When PLAYWRIGHT_BASE_URL is set (e.g. Vercel), skip local server startup.
-  // Otherwise start the full monorepo dev stack (client + server) from the root.
-  webServer: isCI
+  // Servers must be running before tests:
+  //   npm run dev          (from stayuga/ monorepo root — starts both client + server)
+  //   npx playwright test  (from stayuga/client/)
+  // To test against production:
+  //   $env:PLAYWRIGHT_BASE_URL="https://your-vercel-url.vercel.app"; npx playwright test
+  webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
         command: "npm run dev",
-        cwd: path.resolve(__dirname, ".."),
         port: 3000,
         reuseExistingServer: true,
         timeout: 120_000,

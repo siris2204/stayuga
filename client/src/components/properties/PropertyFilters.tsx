@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { CalendarDays, SlidersHorizontal, X } from "lucide-react";
@@ -16,6 +16,7 @@ interface Props {
 
 export function PropertyFilters({ type, city, minGuests, checkIn, checkOut }: Props) {
   const router = useRouter();
+  const uid = useId();
 
   const [selType, setSelType] = useState(type ?? "");
   const [selCity, setSelCity] = useState(city ?? "");
@@ -118,7 +119,7 @@ export function PropertyFilters({ type, city, minGuests, checkIn, checkOut }: Pr
             <label key={opt.value} className="flex items-center gap-2.5 cursor-pointer">
               <input
                 type="radio"
-                name="type"
+                name={`${uid}-type`}
                 value={opt.value}
                 checked={selType === opt.value}
                 onChange={() => setSelType(opt.value)}
