@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf7f2;
-  --foreground: #1b1b18;
+  --background: #EFE3D5;
+  --foreground: #281822;
 
-  --color-ink: #14140f;
-  --color-ink-soft: #3c3b34;
-  --color-forest: #6b2737;
-  --color-forest-light: #7d3545;
-  --color-gold: #b8935a;
-  --color-gold-light: #d8b98a;
-  --color-cream: #faf7f2;
-  --color-sand: #f0e9dd;
-  --color-line: #e4dccb;
+  --color-ink: #281822;        /* very dark plum */
+  --color-ink-soft: #957082;   /* muted mauve — captions, labels */
+  --color-forest: #48182E;     /* deep burgundy — primary / CTA */
+  --color-forest-light: #5f2a3e; /* hover state */
+  --color-gold: #C49C79;       /* warm tan — accent */
+  --color-gold-light: #D4B090; /* lighter tan — hover / highlight */
+  --color-cream: #EFE3D5;      /* light cream — page background */
+  --color-sand: #E5D5C2;       /* warm sand — card surfaces */
+  --color-line: #D9C9B5;       /* subtle borders */
 }
 
 @theme inline {
