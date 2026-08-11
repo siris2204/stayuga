@@ -19,6 +19,7 @@ const bookingSchema = z.object({
   checkOut: z.coerce.date(),
   guests: z.number().int().positive(),
   message: z.string().optional(),
+  additionalServices: z.array(z.string()).optional(),
 });
 
 router.post(
@@ -36,7 +37,11 @@ router.post(
     await sendEmail({
       to: req.body.email,
       subject: `We received your enquiry for ${property.title}`,
-      body: `Hi ${req.body.name}, thanks for your enquiry about ${property.title}. Our team will reach out shortly.`,
+      body: `Hi ${req.body.name}, thanks for your enquiry about ${property.title}. Our team will reach out shortly.${
+        req.body.additionalServices?.length
+          ? `\n\nAdditional services requested: ${req.body.additionalServices.join(", ")}.`
+          : ""
+      }`,
     });
 
     res.status(201).json({ booking });

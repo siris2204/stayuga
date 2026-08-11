@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MessageCircle } from "lucide-react";
+import { Check, MessageCircle } from "lucide-react";
 import { apiFetch, ApiRequestError } from "@/lib/api";
 import { Input, Textarea } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
@@ -17,7 +17,19 @@ const schema = z.object({
   checkOut: z.string().min(1, "Select a check-out date"),
   guests: z.coerce.number().int().min(1, "At least 1 guest"),
   message: z.string().optional(),
+  additionalServices: z.array(z.string()).optional(),
 });
+
+const SERVICES = [
+  "Food & Catering",
+  "Event Management",
+  "Decoration",
+  "Photography",
+  "Music & Entertainment",
+  "Housekeeping",
+  "Transportation",
+  "Bonfire Setup",
+];
 
 type FormValues = z.input<typeof schema>;
 type FormOutput = z.output<typeof schema>;
@@ -39,6 +51,7 @@ export function BookingInquiryForm({
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues, unknown, FormOutput>({ resolver: zodResolver(schema) });
 
@@ -47,7 +60,11 @@ export function BookingInquiryForm({
   const whatsappText = encodeURIComponent(
     `Hi Stayuga, I'd like to enquire about ${propertyTitle}${
       values.checkIn && values.checkOut ? ` from ${values.checkIn} to ${values.checkOut}` : ""
-    } for ${values.guests ?? "?"} guests.`
+    } for ${values.guests ?? "?"} guests.${
+      values.additionalServices?.length
+        ? `\n\nAdditional services: ${values.additionalServices.join(", ")}.`
+        : ""
+    }`
   );
   const whatsappHref = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${whatsappText}`
@@ -121,6 +138,42 @@ export function BookingInquiryForm({
         placeholder="Tell us about your stay — occasion, preferences, anything else."
         {...register("message")}
       />
+
+      {/* Additional services */}
+      <div>
+        <p className="mb-1 text-sm font-medium text-ink">Additional services</p>
+        <p className="mb-3 text-xs text-ink-soft">Select everything you'd like us to arrange — optional.</p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {SERVICES.map((service) => {
+            const selected = (values.additionalServices ?? []).includes(service);
+            return (
+              <button
+                key={service}
+                type="button"
+                onClick={() => {
+                  const current = values.additionalServices ?? [];
+                  setValue(
+                    "additionalServices",
+                    selected ? current.filter((s) => s !== service) : [...current, service]
+                  );
+                }}
+                className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition-colors ${
+                  selected
+                    ? "border-forest bg-forest/8 font-medium text-forest"
+                    : "border-line text-ink hover:border-forest/50"
+                }`}
+              >
+                <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                  selected ? "border-forest bg-forest text-cream" : "border-line"
+                }`}>
+                  {selected && <Check size={10} strokeWidth={3} />}
+                </span>
+                {service}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {status === "error" && <p className="text-sm text-red-600">{errorMessage}</p>}
 

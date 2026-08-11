@@ -10,6 +10,7 @@ const bookingSchema = new Schema(
     checkOut: { type: Date, required: true },
     guests: { type: Number, required: true, min: 1 },
     message: { type: String, default: "" },
+    additionalServices: { type: [String], default: [] },
     status: {
       type: String,
       enum: ["pending", "confirmed", "declined"],
