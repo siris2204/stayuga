@@ -19,7 +19,7 @@ export default async function ContactPage() {
   };
 
   return (
-    <div className="py-16">
+    <div className="pt-36 pb-16">
       <Container>
         <SectionHeading
           eyebrow="Get in touch"

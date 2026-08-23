@@ -13,6 +13,13 @@
   --color-cream: #EFE3D5;      /* light cream — page background */
   --color-sand: #E5D5C2;       /* warm sand — card surfaces */
   --color-line: #D9C9B5;       /* subtle borders */
+
+  --color-charcoal: #181113;      /* near-black — nav/footer surfaces */
+  --color-champagne: #E2C7A9;     /* light gold text on dark surfaces */
+  --color-champagne-dark: #C5A880;/* gold accent/border on dark surfaces */
+  --color-paper: #F7F4EE;         /* off-white section background */
+  --color-paper-ink: #1C1917;     /* near-black text on paper background */
+  --color-bronze: #8C7456;        /* muted bronze accent on paper background */
 }
 
 @theme inline {
@@ -27,6 +34,12 @@
   --color-cream: var(--color-cream);
   --color-sand: var(--color-sand);
   --color-line: var(--color-line);
+  --color-charcoal: var(--color-charcoal);
+  --color-champagne: var(--color-champagne);
+  --color-champagne-dark: var(--color-champagne-dark);
+  --color-paper: var(--color-paper);
+  --color-paper-ink: var(--color-paper-ink);
+  --color-bronze: var(--color-bronze);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
 }

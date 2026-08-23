@@ -14,7 +14,7 @@ export default async function ExperiencesPage() {
   const experiences = await getExperiences().catch(() => []);
 
   return (
-    <div className="py-16">
+    <div className="pt-36 pb-16">
       <Container>
         <SectionHeading
           eyebrow="Experiences"
