@@ -1,11 +1,21 @@
+import { ContactInfo } from "./types";
+
 /**
- * Default public contact details, used as a fallback until the real
- * CMS-managed contact info (`getContent().blocks["contact-info"]`) loads.
+ * Fallback shown only until `/api/content`'s "contact-info" block loads (or
+ * if the request fails). The real values live in server/.env
+ * (WHATSAPP_NUMBER, CONTACT_EMAIL, INSTAGRAM_URL) — nothing here should be
+ * treated as authoritative.
  */
+export const DEFAULT_CONTACT: ContactInfo = {
+  email: "hello@stayuga.com",
+  phone: "+91 00000 00000",
+  location: "Hyderabad, India",
+  instagram: "https://www.instagram.com/",
+};
 
-export const CONCIERGE_TEL = "+918121933639";
-export const CONCIERGE_TEL_DISPLAY = "+91 81219 33639";
-export const CONCIERGE_EMAIL = "stayuga.official@gmail.com";
-
-export const INSTAGRAM_URL = "https://www.instagram.com/stayuga/";
-export const WHATSAPP_URL = `https://wa.me/${CONCIERGE_TEL.replace(/[^\d]/g, "")}`;
+/** Builds a wa.me deep link from a contact-info phone number. */
+export function whatsappLink(phone: string, message?: string): string {
+  const number = phone.replace(/[^\d]/g, "");
+  const text = message ? `?text=${encodeURIComponent(message)}` : "";
+  return number ? `https://wa.me/${number}${text}` : `https://wa.me/${text}`;
+}

@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { emptyContent, getContent } from "@/lib/data";
+import { DEFAULT_CONTACT } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -12,11 +13,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const { blocks } = await getContent().catch(emptyContent);
-  const contact = blocks["contact-info"] ?? {
-    email: "hello@stayuga.com",
-    phone: "+91 00000 00000",
-    location: "Hyderabad, India",
-  };
+  const contact = blocks["contact-info"] ?? DEFAULT_CONTACT;
 
   return (
     <div className="pt-36 pb-16">
