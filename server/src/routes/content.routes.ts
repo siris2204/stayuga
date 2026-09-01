@@ -5,8 +5,18 @@ import { asyncHandler } from "../middleware/asyncHandler";
 import { validateBody } from "../middleware/validate";
 import { requireAdmin } from "../middleware/auth";
 import { ApiError } from "../middleware/errors";
+import { env } from "../config/env";
 
 const router = Router();
+
+/** "+918121933639" -> "+91 81219 33639" (last 10 digits are the number, rest is country code). */
+function formatPhoneDisplay(raw: string): string {
+  const digits = raw.replace(/[^\d]/g, "");
+  const national = digits.slice(-10);
+  const cc = digits.slice(0, digits.length - 10) || "91";
+  if (national.length !== 10) return raw;
+  return `+${cc} ${national.slice(0, 5)} ${national.slice(5)}`;
+}
 
 router.get(
   "/",
@@ -18,6 +28,19 @@ router.get(
       TestimonialModel.find().sort({ order: 1 }),
     ]);
     const blockMap = Object.fromEntries(blocks.map((b) => [b.key, b.value]));
+
+    // "contact-info" defaults to the env-configured values — the single source
+    // of truth for the WhatsApp number, email, and Instagram link shown across
+    // the site. An admin-edited block (via PUT /blocks/contact-info) overrides
+    // individual fields on top of that default.
+    blockMap["contact-info"] = {
+      phone: env.whatsappNumber ? formatPhoneDisplay(env.whatsappNumber) : "",
+      email: env.contactEmail,
+      location: "Hyderabad, India",
+      instagram: env.instagramUrl,
+      ...(blockMap["contact-info"] ?? {}),
+    };
+
     res.json({ blocks: blockMap, faqs, policies, testimonials });
   })
 );

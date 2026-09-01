@@ -5,7 +5,7 @@ import { ChevronDown, Phone, Mail } from "lucide-react";
 import { emptyContent, getContent } from "@/lib/data";
 import { ValueProps } from "@/components/about/ValueProps";
 import { Testimonials } from "@/components/about/Testimonials";
-import { CONCIERGE_EMAIL, CONCIERGE_TEL, CONCIERGE_TEL_DISPLAY } from "@/lib/contact";
+import { DEFAULT_CONTACT } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "About",
@@ -24,6 +24,7 @@ const PILLARS = [
 
 export default async function AboutPage() {
   const { blocks, faqs, testimonials } = await getContent().catch(emptyContent);
+  const contact = blocks["contact-info"] ?? DEFAULT_CONTACT;
   const mission = blocks["about-mission"] ?? {
     heading: "A family anniversary, and far too many phone calls.",
     body: "The farmhouse was beautiful. Everything else — the caterer, the decorator, the coordinator — was six separate conversations and one long, anxious week.\n\nStayuga exists so that week never happens to anyone else. One number, one team, and a day you get to actually attend.",
@@ -132,19 +133,19 @@ export default async function AboutPage() {
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
             <a
-              href={`tel:${CONCIERGE_TEL}`}
+              href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
               className="flex items-center gap-2.5 text-sm transition-colors hover:text-gold-light"
             >
               <Phone size={15} className="text-gold" aria-hidden="true" />
-              {CONCIERGE_TEL_DISPLAY}
+              {contact.phone}
             </a>
 
             <a
-              href={`mailto:${CONCIERGE_EMAIL}`}
+              href={`mailto:${contact.email}`}
               className="flex items-center gap-2.5 text-sm transition-colors hover:text-gold-light"
             >
               <Mail size={15} className="text-gold" aria-hidden="true" />
-              {CONCIERGE_EMAIL}
+              {contact.email}
             </a>
           </div>
 

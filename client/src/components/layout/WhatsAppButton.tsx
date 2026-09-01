@@ -1,15 +1,33 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { MessageCircle } from "lucide-react";
+import { apiFetch } from "@/lib/api";
+import { DEFAULT_CONTACT, whatsappLink } from "@/lib/contact";
+import { ContactInfo, ContentBlocks } from "@/lib/types";
 
 export function WhatsAppButton() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin")) return null;
+  const [contact, setContact] = useState<ContactInfo>(DEFAULT_CONTACT);
 
-  const number = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "").replace(/[^\d]/g, "");
-  const text = encodeURIComponent("Hi Stayuga, I'd like to know more about your properties.");
-  const href = number ? `https://wa.me/${number}?text=${text}` : `https://wa.me/?text=${text}`;
+  const hidden = pathname?.startsWith("/admin") || pathname?.startsWith("/owner");
+
+  useEffect(() => {
+    if (hidden) return;
+    apiFetch<{ blocks: ContentBlocks }>("/api/content")
+      .then((data) => {
+        if (data.blocks["contact-info"]) setContact(data.blocks["contact-info"]);
+      })
+      .catch(() => {});
+  }, [hidden]);
+
+  if (hidden) return null;
+
+  const href = whatsappLink(
+    contact.phone,
+    "Hi Stayuga, I'd like to know more about your properties."
+  );
 
   return (
     <a

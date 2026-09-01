@@ -102,6 +102,7 @@ export interface ContactInfo {
   email: string;
   phone: string;
   location: string;
+  instagram?: string;
 }
 
 export interface ContentBlocks {

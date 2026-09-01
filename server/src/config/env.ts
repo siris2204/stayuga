@@ -16,6 +16,8 @@ export const env = {
   jwtSecret: required("JWT_SECRET", "dev-secret-change-me"),
   clientOrigin: process.env.CLIENT_ORIGIN ?? "http://localhost:3000",
   whatsappNumber: process.env.WHATSAPP_NUMBER ?? "",
+  contactEmail: process.env.CONTACT_EMAIL ?? "",
+  instagramUrl: process.env.INSTAGRAM_URL ?? "",
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
   razorpayKeyId: process.env.RAZORPAY_KEY_ID ?? "",
