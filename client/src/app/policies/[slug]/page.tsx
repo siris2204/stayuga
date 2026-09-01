@@ -28,7 +28,7 @@ export default async function PolicyPage({ params }: PageProps) {
   const policy = await fetchPolicyOr404(slug);
 
   return (
-    <div className="py-16">
+    <div className="pt-36 pb-16">
       <Container className="max-w-3xl">
         <h1 className="font-display text-3xl text-ink">{policy.title}</h1>
         <p className="mt-6 whitespace-pre-line leading-relaxed text-ink-soft">{policy.content}</p>

@@ -13,7 +13,7 @@ export default async function FaqPage() {
   const { faqs } = await getContent().catch(emptyContent);
 
   return (
-    <div className="py-16">
+    <div className="pt-36 pb-16">
       <Container className="max-w-3xl">
         <SectionHeading eyebrow="Support" title="Frequently asked questions" align="center" />
 
