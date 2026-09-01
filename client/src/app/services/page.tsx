@@ -1,83 +1,128 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { EVENT_SERVICES, STAY_SERVICES, type ServiceItem } from "@/lib/services";
+import { formatPrice } from "@/lib/format";
 
 export const metadata: Metadata = {
-  title: "Services & Experiences",
-  description: "Bespoke concierge, dining, wellness, and transport services for your Stayuga stay.",
+  title: "Services",
+  description:
+    "Stay services and event services at Stayuga farmhouses — dining, wellness, décor, catering and full event management, arranged by one team.",
 };
 
-const serviceList = [
-  {
-    title: "Private Chef & Fine Dining",
-    desc: "Personalized multi-course meals prepared fresh daily with locally sourced ingredients.",
-    price: "From $120 / person",
-    image: "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    title: "Dedicated 24/7 Concierge",
-    desc: "Flight arrangements, VIP restaurant bookings, yacht charters, and emergency support.",
-    price: "Included with every stay",
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    title: "Wellness, Yoga & Spa",
-    desc: "Private yoga instructors, sunrise meditation sessions, and in-villa deep tissue massages.",
-    price: "From $90 / session",
-    image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    title: "Luxury Transport & Chauffeur",
-    desc: "Airport transfers, luxury SUV day hires, and private helicopter charters.",
-    price: "From $150 / day",
-    image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop",
-  },
-];
+function priceLabel(service: ServiceItem) {
+  if (service.priceFrom === null) return "Included";
+  return `From ${formatPrice(service.priceFrom)}${service.unit ? ` ${service.unit}` : ""}`;
+}
+
+function ServiceGrid({ items }: { items: ServiceItem[] }) {
+  return (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {items.map((service) => (
+        <article
+          key={service.title}
+          className="group flex flex-col overflow-hidden border border-line bg-shell transition-shadow hover:shadow-lg sm:flex-row"
+        >
+          <div className="relative h-44 shrink-0 sm:h-auto sm:w-2/5">
+            <Image
+              src={service.image}
+              alt=""
+              fill
+              sizes="(max-width: 640px) 100vw, 20vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </div>
+
+          <div className="flex flex-1 flex-col justify-between p-6">
+            <div>
+              <service.icon
+                size={20}
+                strokeWidth={1.4}
+                className="mb-3 text-gold"
+                aria-hidden="true"
+              />
+              <h3 className="font-display mb-2 text-xl font-normal text-ink">{service.title}</h3>
+              <p className="text-sm font-light leading-relaxed text-ink-soft">{service.desc}</p>
+            </div>
+
+            <div className="mt-6 flex items-center justify-between border-t border-line pt-4">
+              <span className="text-xs font-medium tracking-wide text-gold">
+                {priceLabel(service)}
+              </span>
+              <Link
+                href="/properties"
+                className="link-inline text-[11px] font-semibold uppercase tracking-widest text-ink transition-colors hover:text-gold"
+              >
+                Enquire &rarr;
+              </Link>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen bg-paper pt-20 text-paper-ink">
-      <section className="mx-auto max-w-5xl px-6 py-16 text-center">
-        <span className="mb-3 block text-xs font-semibold uppercase tracking-[0.2em] text-bronze">
-          Tailored Luxury
-        </span>
-        <h1 className="mb-6 font-display text-4xl font-light text-paper-ink md:text-5xl">
-          Our Services &amp; Experiences
+    <div className="min-h-screen bg-cream pt-20 text-ink">
+      {/* ---------------- Intro ---------------- */}
+      <section className="mx-auto max-w-3xl px-6 py-16 text-center">
+        <span className="eyebrow mb-3 text-ink-soft">Everything, one team</span>
+        <h1 className="font-display mb-5 text-4xl font-light text-ink md:text-5xl">
+          Our Services
         </h1>
-        <p className="mx-auto max-w-2xl text-sm font-light leading-relaxed text-stone-600">
-          Every stay includes access to our end-to-end hospitality team. Customize your getaway
-          with bespoke add-ons designed for effortless living.
+        <p className="text-sm font-light leading-relaxed text-ink-soft">
+          Two ways we work: around your stay, and around your occasion.
         </p>
       </section>
 
-      <section className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 pb-24 md:grid-cols-2">
-        {serviceList.map((service) => (
-          <div
-            key={service.title}
-            className="flex flex-col overflow-hidden rounded border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md md:flex-row"
+      {/* ---------------- Stay services ----------------
+          Split by intent rather than one long list — guests booking a
+          weekend and clients booking a wedding want different shelves. */}
+      <section className="mx-auto max-w-7xl px-6 pb-20">
+        <header className="mb-10 border-b border-line pb-5">
+          <span className="eyebrow mb-2 text-gold">01</span>
+          <h2 className="font-display text-3xl font-light text-ink md:text-4xl">Stay Services</h2>
+          <p className="mt-2 max-w-xl text-sm font-light text-ink-soft">
+            Arranged around a booked farmhouse, from the first morning to the last.
+          </p>
+        </header>
+
+        <ServiceGrid items={STAY_SERVICES} />
+      </section>
+
+      {/* ---------------- Event services ---------------- */}
+      <section className="bg-sand/40 py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <header className="mb-10 border-b border-line pb-5">
+            <span className="eyebrow mb-2 text-gold">02</span>
+            <h2 className="font-display text-3xl font-light text-ink md:text-4xl">
+              Event Services
+            </h2>
+            <p className="mt-2 max-w-xl text-sm font-light text-ink-soft">
+              When the farmhouse is the venue — venue, food, décor and management in one contract.
+            </p>
+          </header>
+
+          <ServiceGrid items={EVENT_SERVICES} />
+        </div>
+      </section>
+
+      {/* ---------------- CTA ---------------- */}
+      <section className="bg-ink py-16 text-center text-cream">
+        <div className="mx-auto max-w-2xl px-6">
+          <h2 className="font-display mb-4 text-2xl font-light md:text-3xl">
+            Tell us the occasion. We&rsquo;ll take it from there.
+          </h2>
+          <Link
+            href="/events"
+            className="mt-4 inline-flex items-center gap-3 bg-gold px-8 py-3.5 text-[11px] font-medium uppercase tracking-[0.25em] text-ink transition-colors hover:bg-gold-light"
           >
-            <div className="relative h-48 md:h-auto md:w-1/2">
-              <Image src={service.image} alt={service.title} fill className="object-cover" />
-            </div>
-            <div className="flex flex-col justify-between p-6 md:w-1/2">
-              <div>
-                <h3 className="mb-2 font-display text-lg text-paper-ink">{service.title}</h3>
-                <p className="mb-4 text-xs font-light leading-relaxed text-stone-500">
-                  {service.desc}
-                </p>
-              </div>
-              <div className="flex items-center justify-between border-t border-stone-100 pt-4">
-                <span className="text-xs font-semibold text-bronze">{service.price}</span>
-                <Link
-                  href="/properties"
-                  className="text-xs font-semibold uppercase tracking-wider text-paper-ink transition-colors hover:text-bronze"
-                >
-                  Book &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+            <span>Plan an event</span>
+            <span aria-hidden="true">&rarr;</span>
+          </Link>
+        </div>
       </section>
     </div>
   );

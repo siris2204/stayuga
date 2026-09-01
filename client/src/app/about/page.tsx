@@ -1,108 +1,164 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, Phone, Mail } from "lucide-react";
 import { emptyContent, getContent } from "@/lib/data";
-import { ValueProps } from "@/components/home/ValueProps";
-import { Testimonials } from "@/components/home/Testimonials";
-import { ContactForm } from "@/components/contact/ContactForm";
+import { ValueProps } from "@/components/about/ValueProps";
+import { Testimonials } from "@/components/about/Testimonials";
+import { CONCIERGE_EMAIL, CONCIERGE_TEL, CONCIERGE_TEL_DISPLAY } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "About Us",
-  description: "Learn about Stayuga's mission to curate soulful, handpicked luxury stays.",
+  title: "About",
+  description:
+    "Stayuga is Hyderabad's one-stop farmhouse company — premium stays, dining, décor and full event management under a single point of contact.",
 };
+
+/** The five things we actually deliver, in the order guests ask for them. */
+const PILLARS = [
+  { n: "01", title: "Premium Stays", copy: "Farmhouses chosen for privacy, space and keeping." },
+  { n: "02", title: "Food & Catering", copy: "From a chef's table for eight to a banquet for three hundred." },
+  { n: "03", title: "Décor & Themes", copy: "Styled to the occasion, built on site." },
+  { n: "04", title: "Event Management", copy: "Run end to end, from walkthrough to wrap." },
+  { n: "05", title: "Hospitality", copy: "A trained on-ground team for the length of your stay." },
+];
 
 export default async function AboutPage() {
   const { blocks, faqs, testimonials } = await getContent().catch(emptyContent);
   const mission = blocks["about-mission"] ?? {
-    heading: "More than a stay — it's a feeling.",
-    body: "Stayuga curates a small, handpicked portfolio of luxury villas and farmhouses, each personally vetted for design, service, and setting. We bridge the gap between world-class boutique hospitality and the intimacy of private residential living.",
+    heading: "A family anniversary, and far too many phone calls.",
+    body: "The farmhouse was beautiful. Everything else — the caterer, the decorator, the coordinator — was six separate conversations and one long, anxious week.\n\nStayuga exists so that week never happens to anyone else. One number, one team, and a day you get to actually attend.",
   };
+  const missionParagraphs = mission.body.split("\n\n");
 
   return (
     <div className="min-h-screen bg-cream pt-20 text-ink">
-      {/* 1. HERO PHILOSOPHY */}
-      <section className="mx-auto max-w-5xl px-6 py-16 text-center">
-        <span className="mb-3 block text-xs font-semibold uppercase tracking-[0.25em] text-ink-soft">
-          Our Philosophy
-        </span>
-        <h1 className="mb-6 font-display text-4xl font-light text-ink md:text-5xl">
-          About Stayuga
+      {/* ---------------- 1 · PHILOSOPHY ---------------- */}
+      <section className="mx-auto max-w-3xl px-6 py-16 text-center">
+        <span className="eyebrow mb-3 text-ink-soft">Our Philosophy</span>
+        <h1 className="font-display mb-6 text-4xl font-light text-ink md:text-5xl">
+          Focus on the celebration.
+          <br />
+          Leave the coordination to us.
         </h1>
-        <p className="mx-auto max-w-2xl text-base font-light leading-relaxed text-ink/80">
-          At Stayuga, we believe a great stay is more than just a destination — it&apos;s a curated
-          feeling. Every villa is handpicked for its soul, character, and tranquility.
+        <p className="text-base font-light leading-relaxed text-ink-soft">
+          Stayuga is Hyderabad&rsquo;s one-stop farmhouse company — stay, table, styling and event,
+          arranged by a single team.
         </p>
       </section>
 
-      {/* 2. NARRATIVE */}
+      {/* ---------------- 2 · ORIGIN ---------------- */}
       <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 py-12 md:grid-cols-2">
-        <div className="relative h-96 w-full overflow-hidden rounded-sm border border-forest/10 shadow-lg">
+        <div className="relative h-96 w-full overflow-hidden border border-line">
           <Image
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
-            alt="Stayuga Villa Interior"
+            alt="Interior of a Stayuga farmhouse"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
           />
         </div>
         <div>
-          <h2 className="mb-4 font-display text-3xl font-light text-ink">{mission.heading}</h2>
-          <p className="whitespace-pre-line text-sm font-light leading-relaxed text-ink/80">
-            {mission.body}
-          </p>
+          <span className="eyebrow mb-3 text-gold">How it started</span>
+          <h2 className="font-display mb-4 text-3xl font-light text-ink">{mission.heading}</h2>
+          {missionParagraphs.map((p, i) => (
+            <p key={i} className="mb-4 text-sm font-light leading-relaxed text-ink-soft last:mb-0">
+              {p}
+            </p>
+          ))}
         </div>
       </section>
 
-      {/* 3. WHY STAYUGA */}
-      <section className="border-t border-forest/10 py-12">
+      {/* ---------------- 3 · WHAT WE DO ---------------- */}
+      <section className="border-t border-line py-16">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-10 text-center">
+            <span className="eyebrow mb-3 text-ink-soft">What we do</span>
+            <h2 className="font-display text-3xl font-light text-ink">Five parts, one team</h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">
+            {PILLARS.map(({ n, title, copy }) => (
+              <div key={n} className="bg-cream p-6">
+                <span className="font-display text-sm text-gold">{n}</span>
+                <h3 className="font-display mt-3 text-lg font-normal text-ink">{title}</h3>
+                <p className="mt-2 text-sm font-light leading-relaxed text-ink-soft">{copy}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 4 · WHY STAYUGA ---------------- */}
+      <section className="border-t border-line">
         <ValueProps />
       </section>
 
-      {/* 4. FAQ ACCORDION */}
+      {/* ---------------- 5 · FAQ ---------------- */}
       {faqs.length > 0 && (
-        <section className="mx-auto max-w-4xl border-t border-forest/10 px-6 py-16">
+        <section className="mx-auto max-w-3xl border-t border-line px-6 py-16">
           <div className="mb-10 text-center">
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-ink-soft">
-              Common Inquiries
-            </span>
-            <h2 className="font-display text-3xl font-light text-ink">Frequently Asked Questions</h2>
+            <span className="eyebrow mb-2 text-ink-soft">Common questions</span>
+            <h2 className="font-display text-3xl font-light text-ink">Before you ask</h2>
           </div>
 
-          <div className="space-y-4">
+          {/*
+            Native <details> rather than useState — this keeps the page a server
+            component, works without JS, and gives us open/close semantics for
+            screen readers for free.
+          */}
+          <div className="divide-y divide-line border border-line bg-shell">
             {faqs.map((faq) => (
-              <details
-                key={faq._id}
-                className="group rounded-sm border border-forest/10 bg-white p-5 shadow-sm transition-all hover:border-gold"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-sm font-medium text-ink">
+              <details key={faq._id} className="group p-5">
+                <summary className="font-display flex cursor-pointer list-none items-center justify-between gap-4 text-base text-ink">
                   {faq.question}
-                  <ChevronDown size={16} className="shrink-0 text-gold transition-transform group-open:rotate-180" />
+                  <ChevronDown
+                    size={18}
+                    className="shrink-0 text-gold transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
                 </summary>
-                <p className="mt-3 border-t border-stone-100 pt-3 text-xs font-light leading-relaxed text-ink/75">
-                  {faq.answer}
-                </p>
+                <p className="mt-3 text-sm font-light leading-relaxed text-ink-soft">{faq.answer}</p>
               </details>
             ))}
           </div>
         </section>
       )}
 
-      {/* 5. CONTACT CONCIERGE */}
-      <section className="border-t border-forest bg-ink py-16 text-cream">
-        <div className="mx-auto max-w-3xl px-6">
-          <div className="mb-8 text-center">
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-gold">
-              Get in Touch
-            </span>
-            <h2 className="font-display text-3xl font-light text-cream">Contact Concierge</h2>
+      {/* ---------------- 6 · CONCIERGE ---------------- */}
+      <section className="bg-ink py-16 text-cream">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <span className="eyebrow mb-3 text-gold">Get in touch</span>
+          <h2 className="font-display mb-8 text-3xl font-light">Talk to a concierge</h2>
+
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
+            <a
+              href={`tel:${CONCIERGE_TEL}`}
+              className="flex items-center gap-2.5 text-sm transition-colors hover:text-gold-light"
+            >
+              <Phone size={15} className="text-gold" aria-hidden="true" />
+              {CONCIERGE_TEL_DISPLAY}
+            </a>
+
+            <a
+              href={`mailto:${CONCIERGE_EMAIL}`}
+              className="flex items-center gap-2.5 text-sm transition-colors hover:text-gold-light"
+            >
+              <Mail size={15} className="text-gold" aria-hidden="true" />
+              {CONCIERGE_EMAIL}
+            </a>
           </div>
 
-          <div className="rounded-sm border border-cream/10 bg-cream p-6 sm:p-8">
-            <ContactForm />
-          </div>
+          <Link
+            href="/contact"
+            className="mt-10 inline-flex items-center gap-3 bg-gold px-8 py-3.5 text-[11px] font-medium uppercase tracking-[0.25em] text-ink transition-colors hover:bg-gold-light"
+          >
+            <span>Send an enquiry</span>
+            <span aria-hidden="true">&rarr;</span>
+          </Link>
         </div>
       </section>
 
-      {/* 6. GUEST STORIES */}
+      {/* ---------------- 7 · GUEST STORIES ---------------- */}
       <Testimonials testimonials={testimonials} />
     </div>
   );

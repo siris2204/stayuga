@@ -83,7 +83,7 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-paper pt-20 text-paper-ink">
+    <div className="min-h-screen bg-shell pt-20 text-[#1c1417]">
       {/* 1. HERO */}
       <section className="relative flex h-[480px] items-end justify-start bg-black">
         <Image
@@ -95,7 +95,7 @@ export default function EventsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16">
-          <span className="mb-3 block text-[11px] font-semibold uppercase tracking-[0.25em] text-champagne">
+          <span className="mb-3 block text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-light">
             Private Events &amp; Celebrations
           </span>
           <h1 className="mb-4 font-display text-4xl font-light leading-tight text-white md:text-5xl">
@@ -112,10 +112,10 @@ export default function EventsPage() {
       {/* 2. EVENT TYPES */}
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-bronze">
+          <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
             Tailored Experiences
           </span>
-          <h2 className="font-display text-3xl font-light text-paper-ink md:text-4xl">
+          <h2 className="font-display text-3xl font-light text-[#1c1417] md:text-4xl">
             Experiences for Every Occasion
           </h2>
         </div>
@@ -130,7 +130,7 @@ export default function EventsPage() {
                 <Image src={item.image} alt={item.title} fill className="object-cover" />
               </div>
               <div className="p-5">
-                <h3 className="mb-2 font-display text-lg text-paper-ink">{item.title}</h3>
+                <h3 className="mb-2 font-display text-lg text-[#1c1417]">{item.title}</h3>
                 <p className="text-xs font-light leading-relaxed text-stone-500">{item.desc}</p>
               </div>
             </div>
@@ -139,10 +139,10 @@ export default function EventsPage() {
       </section>
 
       {/* 3. EVENT INQUIRY FORM */}
-      <section className="bg-charcoal py-16 text-white">
+      <section className="bg-ink py-16 text-white">
         <div className="mx-auto max-w-4xl px-6">
           <div className="mb-10 text-center">
-            <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-champagne-dark">
+            <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
               Plan With Us
             </span>
             <h2 className="font-display text-3xl font-light">Custom Event Inquiry</h2>
@@ -152,14 +152,14 @@ export default function EventsPage() {
           </div>
 
           {status === "success" ? (
-            <div className="rounded-lg border border-champagne-dark/40 bg-black/30 p-8 text-center">
-              <p className="font-display text-lg text-champagne">Inquiry received</p>
+            <div className="rounded-lg border border-gold/40 bg-black/30 p-8 text-center">
+              <p className="font-display text-lg text-gold-light">Inquiry received</p>
               <p className="mt-2 text-sm text-stone-400">
                 Thank you — our event coordinator will connect with you shortly.
               </p>
               <button
                 onClick={() => setStatus("idle")}
-                className="mt-4 text-sm font-medium text-champagne underline underline-offset-4"
+                className="mt-4 text-sm font-medium text-gold-light underline underline-offset-4"
               >
                 Submit another inquiry
               </button>
@@ -175,7 +175,7 @@ export default function EventsPage() {
                     placeholder="Full name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-champagne-dark focus:outline-none"
+                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-gold focus:outline-none"
                   />
                 </div>
 
@@ -187,7 +187,7 @@ export default function EventsPage() {
                     placeholder="name@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-champagne-dark focus:outline-none"
+                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-gold focus:outline-none"
                   />
                 </div>
 
@@ -198,7 +198,7 @@ export default function EventsPage() {
                     placeholder="+91 / +1 ..."
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-champagne-dark focus:outline-none"
+                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-gold focus:outline-none"
                   />
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default function EventsPage() {
                   <select
                     value={formData.eventType}
                     onChange={(e) => setFormData({ ...formData, eventType: e.target.value })}
-                    className="w-full rounded border border-white/20 bg-charcoal p-3 text-white focus:border-champagne-dark focus:outline-none"
+                    className="w-full rounded border border-white/20 bg-ink p-3 text-white focus:border-gold focus:outline-none"
                   >
                     {EVENT_TYPE_OPTIONS.map((opt) => (
                       <option key={opt}>{opt}</option>
@@ -227,7 +227,7 @@ export default function EventsPage() {
                     placeholder="e.g. 5"
                     value={formData.stayBackRooms}
                     onChange={(e) => setFormData({ ...formData, stayBackRooms: e.target.value })}
-                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white focus:border-champagne-dark focus:outline-none"
+                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white focus:border-gold focus:outline-none"
                   />
                 </div>
 
@@ -241,7 +241,7 @@ export default function EventsPage() {
                     placeholder="e.g. 50"
                     value={formData.guestCount}
                     onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })}
-                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white focus:border-champagne-dark focus:outline-none"
+                    className="w-full rounded border border-white/20 bg-white/5 p-3 text-white focus:border-gold focus:outline-none"
                   />
                 </div>
               </div>
@@ -253,7 +253,7 @@ export default function EventsPage() {
                   placeholder="Tell us about the dates, preferred destinations, catering preferences, or special requests..."
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-champagne-dark focus:outline-none"
+                  className="w-full rounded border border-white/20 bg-white/5 p-3 text-white placeholder-stone-500 focus:border-gold focus:outline-none"
                 />
               </div>
 
@@ -263,7 +263,7 @@ export default function EventsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded border border-champagne-dark bg-champagne-dark px-8 py-3 font-semibold uppercase tracking-widest text-charcoal transition-all hover:bg-transparent hover:text-champagne-dark disabled:opacity-50"
+                  className="rounded border border-gold bg-gold px-8 py-3 font-semibold uppercase tracking-widest text-ink transition-all hover:bg-transparent hover:text-gold disabled:opacity-50"
                 >
                   {submitting ? "Submitting..." : "Submit Inquiry →"}
                 </button>

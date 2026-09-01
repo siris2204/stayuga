@@ -30,7 +30,9 @@ export function Input({
 }: InputHTMLAttributes<HTMLInputElement> & { label?: string; error?: string }) {
   return (
     <FieldWrapper label={label} error={error}>
-      <input className={clsx(fieldBase, className)} {...props} />
+      {/* suppressHydrationWarning: password-manager extensions (LastPass, Dashlane, …)
+          inject attributes like fdprocessedid onto inputs after hydration — see layout.tsx */}
+      <input suppressHydrationWarning className={clsx(fieldBase, className)} {...props} />
     </FieldWrapper>
   );
 }
@@ -43,7 +45,7 @@ export function Textarea({
 }: TextareaHTMLAttributes<HTMLTextAreaElement> & { label?: string; error?: string }) {
   return (
     <FieldWrapper label={label} error={error}>
-      <textarea className={clsx(fieldBase, "min-h-32 resize-y", className)} {...props} />
+      <textarea suppressHydrationWarning className={clsx(fieldBase, "min-h-32 resize-y", className)} {...props} />
     </FieldWrapper>
   );
 }
@@ -57,7 +59,7 @@ export function Select({
 }: SelectHTMLAttributes<HTMLSelectElement> & { label?: string; error?: string }) {
   return (
     <FieldWrapper label={label} error={error}>
-      <select className={clsx(fieldBase, className)} {...props}>
+      <select suppressHydrationWarning className={clsx(fieldBase, className)} {...props}>
         {children}
       </select>
     </FieldWrapper>

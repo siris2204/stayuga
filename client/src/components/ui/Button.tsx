@@ -22,7 +22,9 @@ export function Button({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { children: ReactNode; variant?: Variant }) {
   return (
-    <button className={clsx(base, variants[variant], className)} {...props}>
+    // suppressHydrationWarning: password-manager extensions inject attributes
+    // like fdprocessedid onto buttons after hydration — see layout.tsx
+    <button suppressHydrationWarning className={clsx(base, variants[variant], className)} {...props}>
       {children}
     </button>
   );

@@ -18,7 +18,11 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   const { token, headers, ...rest } = options;
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 10_000);
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort("timeout");
+  }, 10_000);
 
   let res: Response;
   try {
@@ -32,6 +36,9 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
       },
       cache: rest.cache ?? "no-store",
     });
+  } catch (err) {
+    if (timedOut) throw new ApiRequestError(408, "Request timed out — please try again");
+    throw err;
   } finally {
     clearTimeout(timer);
   }

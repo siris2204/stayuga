@@ -1,53 +1,84 @@
 @import "tailwindcss";
 
+/* ===============================================================
+   STAYUGA — 60 / 30 / 10 COLOUR SYSTEM
+
+   60%  CANVAS   cream / sand / shell / line  → backgrounds, cards, rules
+   30%  INK      ink / ink-deep               → dark bands, header, footer, type
+   10%  ACCENT   gold / gold-light            → CTAs, eyebrows, active states
+
+   Rule of thumb when adding UI:
+     • Reach for a CANVAS token first — it should dominate the viewport.
+     • Use INK for the anchoring dark bands and all body copy.
+     • Use ACCENT sparingly. If a screen has more than a few gold elements,
+       one of them should probably be ink or canvas instead.
+
+   Do not introduce raw hex values in components — add a token here instead.
+   =============================================================== */
+
 :root {
-  --background: #EFE3D5;
-  --foreground: #281822;
+  /* ---------- 60% — CANVAS ---------- */
+  --color-cream: #efe3d5; /* page background */
+  --color-sand: #e5d5c2; /* raised surfaces, alternating bands */
+  --color-shell: #f7efe5; /* cards sitting on cream */
+  --color-line: #d9c9b5; /* hairlines and dividers */
 
-  --color-ink: #281822;        /* very dark plum */
-  --color-ink-soft: #957082;   /* muted mauve — captions, labels */
-  --color-forest: #48182E;     /* deep burgundy — primary / CTA */
-  --color-forest-light: #5f2a3e; /* hover state */
-  --color-gold: #C49C79;       /* warm tan — accent */
-  --color-gold-light: #D4B090; /* lighter tan — hover / highlight */
-  --color-cream: #EFE3D5;      /* light cream — page background */
-  --color-sand: #E5D5C2;       /* warm sand — card surfaces */
-  --color-line: #D9C9B5;       /* subtle borders */
+  /* ---------- 30% — INK ---------- */
+  --color-ink: #281822; /* body copy, dark sections */
+  --color-ink-deep: #1e1119; /* header, footer, deepest bands */
+  --color-ink-soft: #7a5c6b; /* muted captions — AA contrast on cream */
+  --color-forest: #48182e; /* burgundy, admin + owner surfaces */
+  --color-forest-light: #5f2a3e;
 
-  --color-charcoal: #181113;      /* near-black — nav/footer surfaces */
-  --color-champagne: #E2C7A9;     /* light gold text on dark surfaces */
-  --color-champagne-dark: #C5A880;/* gold accent/border on dark surfaces */
-  --color-paper: #F7F4EE;         /* off-white section background */
-  --color-paper-ink: #1C1917;     /* near-black text on paper background */
-  --color-bronze: #8C7456;        /* muted bronze accent on paper background */
+  /* ---------- 10% — ACCENT ---------- */
+  --color-gold: #c49c79;
+  --color-gold-light: #d9b894;
+
+  --background: var(--color-cream);
+  --foreground: var(--color-ink);
+
+  /* Layout tokens used for mobile spacing / sticky offsets */
+  --header-h: 68px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-bar-h: 76px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 84px;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-cream: var(--color-cream);
+  --color-sand: var(--color-sand);
+  --color-shell: var(--color-shell);
+  --color-line: var(--color-line);
   --color-ink: var(--color-ink);
+  --color-ink-deep: var(--color-ink-deep);
   --color-ink-soft: var(--color-ink-soft);
   --color-forest: var(--color-forest);
   --color-forest-light: var(--color-forest-light);
   --color-gold: var(--color-gold);
   --color-gold-light: var(--color-gold-light);
-  --color-cream: var(--color-cream);
-  --color-sand: var(--color-sand);
-  --color-line: var(--color-line);
-  --color-charcoal: var(--color-charcoal);
-  --color-champagne: var(--color-champagne);
-  --color-champagne-dark: var(--color-champagne-dark);
-  --color-paper: var(--color-paper);
-  --color-paper-ink: var(--color-paper-ink);
-  --color-bronze: var(--color-bronze);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Stops iOS Safari from auto-inflating text in landscape */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  /* Kill horizontal scroll caused by wide hero images / grids on phones */
+  overflow-x: hidden;
 }
 
 .font-display {
@@ -57,4 +88,157 @@ body {
 ::selection {
   background: var(--color-gold-light);
   color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------
+   TYPOGRAPHY HELPERS
+   The eyebrow / label treatment repeats on every page — one class
+   instead of re-declaring tracking and size in a dozen components.
+   --------------------------------------------------------------- */
+
+.eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------
+   MOBILE / TABLET OPTIMISATIONS
+   --------------------------------------------------------------- */
+
+/* Never let media or embeds blow out the viewport */
+img,
+video,
+iframe,
+svg {
+  max-width: 100%;
+}
+
+/* iOS zooms the page whenever an input has font-size < 16px.
+   Force 16px on small screens while keeping the visual scale via padding. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Comfortable, thumb-friendly hit areas on touch devices (WCAG 2.5.5) */
+@media (pointer: coarse) {
+  a,
+  button,
+  [role="button"],
+  input[type="submit"],
+  select {
+    min-height: 44px;
+  }
+
+  a.link-inline,
+  button.link-inline {
+    min-height: 0;
+  }
+}
+
+/* Remove the grey tap flash on Android/iOS */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Horizontal snap rails (mobile galleries, filter chips) */
+.snap-rail {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+.snap-rail::-webkit-scrollbar {
+  display: none;
+}
+.snap-rail > * {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+}
+
+/* Utility: pad the bottom of a page so the mobile sticky bar never covers content */
+.pb-mobile-bar {
+  padding-bottom: calc(var(--mobile-bar-h) + var(--safe-bottom) + 1rem);
+}
+@media (min-width: 1024px) {
+  .pb-mobile-bar {
+    padding-bottom: 0;
+  }
+}
+
+/* Utility: offset scroll targets so the fixed header doesn't cover headings */
+[id] {
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+/* Visible focus ring for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------
+   ANIMATIONS
+   --------------------------------------------------------------- */
+
+@keyframes su-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Page-to-page route transition.
+   Opacity only — see PageTransition.tsx for why transforms are avoided here. */
+@keyframes su-page-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: su-page-enter 0.4s ease-out both;
+}
+
+.animate-fade-up {
+  animation: su-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger helpers for lists / grids */
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger > *:nth-child(5) { animation-delay: 0.2s; }
+.stagger > *:nth-child(6) { animation-delay: 0.24s; }
+
+/* Respect the user's OS-level motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
