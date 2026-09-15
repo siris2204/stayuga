@@ -1,4 +1,7 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+// `||` (not `??`) so a blank-but-set env var (e.g. left empty in a Vercel
+// project's dashboard) also falls back, instead of resolving to "" and
+// silently turning every request into a same-origin relative fetch.
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 export class ApiRequestError extends Error {
   status: number;
