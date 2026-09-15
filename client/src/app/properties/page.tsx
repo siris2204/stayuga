@@ -135,9 +135,18 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
                     </h3>
 
                     <div className="mb-6 flex items-center gap-5 text-[11px] text-stone-600">
-                      <span>🛏 {property.capacity.bedrooms} Bedrooms</span>
-                      <span>🚿 {property.capacity.bathrooms} Bathrooms</span>
-                      <span className="capitalize">🏡 {property.type}</span>
+                      <div className="flex items-center gap-1.5">
+                        <BedIcon />
+                        <span>{property.capacity.bedrooms} Bedrooms</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <BathIcon />
+                        <span>{property.capacity.bathrooms} Bathrooms</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <HomeIcon />
+                        <span className="capitalize">{property.type}</span>
+                      </div>
                     </div>
                   </div>
 
@@ -210,6 +219,32 @@ function MapPinIcon() {
     <svg className="h-3.5 w-3.5 shrink-0 stroke-current text-gold" viewBox="0 0 24 24" fill="none" strokeWidth={2}>
       <path d="M12 21s-6-5.333-6-10a6 6 0 0 1 12 0c0 4.667-6 10-6 10z" />
       <circle cx="12" cy="11" r="2" />
+    </svg>
+  );
+}
+
+function BedIcon() {
+  return (
+    <svg className="h-4 w-4 shrink-0 fill-none stroke-current stroke-[1.5]" viewBox="0 0 24 24">
+      <path d="M2 9v11M22 9v11M2 14h20M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5H2z" />
+    </svg>
+  );
+}
+
+function BathIcon() {
+  return (
+    <svg className="h-4 w-4 shrink-0 fill-none stroke-current stroke-[1.5]" viewBox="0 0 24 24">
+      <path d="M4 12h16a1 1 0 0 1 1 1v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3a1 1 0 0 1 1-1z" />
+      <path d="M6 12V5a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
+function HomeIcon() {
+  return (
+    <svg className="h-4 w-4 shrink-0 fill-none stroke-current stroke-[1.5]" viewBox="0 0 24 24">
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9.5V21h14V9.5" />
     </svg>
   );
 }
