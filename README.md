@@ -13,7 +13,8 @@ Luxury villa & farmhouse booking platform built on the MERN stack — Next.js 16
 | Validation | Zod v4 (client + server) |
 | Animations | Framer Motion |
 | Calendar | date-fns |
-| Image storage | Local disk (Cloudinary-ready — swap `server/src/services/storage.ts`) |
+| Image storage | Cloudinary (falls back to local disk when `CLOUDINARY_URL` is unset) |
+| E2E testing | Playwright |
 
 ## Project Structure
 
@@ -22,6 +23,46 @@ stayuga/
 ├── client/   Next.js app — public site + admin dashboard + owner portal
 └── server/   Express API + MongoDB models
 ```
+
+## Architecture
+
+npm workspaces monorepo — `client` and `server` are independently deployed apps that talk over HTTP; nothing is shared at the code level.
+
+```
+┌────────────────────────┐        REST / JSON over HTTPS        ┌───────────────────────────┐
+│  client (Next.js 16)   │  ───────────────────────────────────▶ │  server (Express)         │
+│  Vercel                │  ◀─────────────────────────────────── │  Railway                  │
+│                        │        Bearer JWT (admin/owner)        │                           │
+│  Server components ──┐ │                                        │  routes/*.routes.ts       │
+│   fetch API at render │ │                                        │   → middleware/auth.ts    │
+│  Client components ──┘ │                                        │   → Mongoose models       │
+│   lib/api.ts:apiFetch  │                                        │                           │
+└────────────────────────┘                                        └─────────────┬─────────────┘
+                                                                                  │
+                                                                       ┌──────────▼──────────┐
+                                                                       │  MongoDB Atlas      │
+                                                                       └─────────────────────┘
+                                                          server/uploads (local disk, dev)
+                                                          or Cloudinary (production) ◀── multer memory storage
+```
+
+**Client (`client/src`)**
+- `app/` — Next.js App Router routes: public site, `/admin`, `/owner`, each with their own layout
+- `lib/api.ts` — single `apiFetch<T>()` wrapper around `fetch`: injects the `Authorization: Bearer` header, sets a 10s timeout, and normalizes error responses into `ApiRequestError`
+- `context/AdminAuthContext.tsx` / `OwnerAuthContext.tsx` — hold the JWT (in memory + storage) and expose it to client components; server components fetch directly with no auth for public data
+- `components/` — grouped by feature area (`admin`, `owner`, `properties`, `home`, …), not by type
+
+**Server (`server/src`)**
+- `app.ts` — mounts one router per resource under `/api/*`; no shared "God router"
+- `routes/*.routes.ts` — thin HTTP layer: validates with Zod (`middleware/validate.ts`), delegates to Mongoose models directly (no separate service/repository layer)
+- `middleware/auth.ts` — two independent JWT schemes. `requireAdmin` / `requireOwner` decode the token and reject if the `role` claim doesn't match — an admin token is a 403 on every `/api/owner/*` route and vice versa, by design
+- `models/` — Mongoose schemas; MongoDB is the only datastore (no cache/queue layer)
+- `services/storage.ts` — uploads are parsed into memory by multer, then persisted to Cloudinary if `CLOUDINARY_URL` is set, else to local disk under `server/uploads` (served back via `express.static`)
+- `services/whatsapp.ts` / `notify.ts` — build `wa.me` links and (stubbed) notification hooks from the CMS-managed contact info, rather than a message-provider SDK
+
+**Content & auth model**
+- CMS content (homepage copy, FAQs, policies, testimonials, contact details) lives in MongoDB as `ContentBlock` key-value documents, edited from `/admin` and read by both the public site and the `wa.me` link builder — there is no `.env`-hardcoded copy
+- Admin and owner are fully separate identities (`AdminUser` / `OwnerUser` models, separate login routes, separate JWTs) — an owner can never reach admin-only data even with a valid token, and the reverse is enforced at the middleware layer, not just in the UI
 
 ## Setup & Running Locally
 
@@ -63,7 +104,8 @@ npm run dev                        # server :4000 + client :3000
 - Capacity details (guests, bedrooms, bathrooms)
 - Google Maps embed
 - Pricing (base price + weekend price)
-- Booking inquiry form (check-in, check-out, guests, contact info)
+- Add-on services selector — optional extras (e.g. chef, transport) with per-night/per-guest pricing, info popups, and a live subtotal
+- Booking inquiry form (check-in, check-out, guests, contact info, selected add-on services)
 - WhatsApp enquiry button
 - JSON-LD structured data for SEO
 
@@ -210,28 +252,46 @@ MONGODB_URI=mongodb://127.0.0.1:27017/stayuga
 JWT_SECRET=change-me-to-a-long-random-string
 CLIENT_ORIGIN=http://localhost:3000
 
-# Optional — leave blank until ready
-CLOUDINARY_URL=
-RESEND_API_KEY=
+# Single source of truth for public contact details — served via /api/content's
+# "contact-info" block (Footer, About, Contact pages) and used to build WhatsApp links.
 WHATSAPP_NUMBER=
+CONTACT_EMAIL=
+INSTAGRAM_URL=
+
+# Optional, deferred integrations — leave blank until ready to go live
+RESEND_API_KEY=
+# From Cloudinary dashboard > "API Environment variable". Format: cloudinary://<api_key>:<api_secret>@<cloud_name>
+# Leave blank to keep using local-disk storage (server/uploads).
+CLOUDINARY_URL=
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
 ```
 
 ---
 
+## Testing
+
+```bash
+npm run test --workspace client        # Playwright end-to-end tests
+npm run test:ui --workspace client     # Playwright UI mode
+npm run test:report --workspace client # last HTML report
+```
+
 ## Deployment Checklist
 
 Before going live:
 
-1. **Images** — swap `server/src/services/storage.ts` for a Cloudinary implementation (local disk does not persist on cloud hosts)
+1. **Images** — set `CLOUDINARY_URL` (local disk does not persist on cloud hosts)
 2. **Database** — provision a MongoDB Atlas cluster; replace `MONGODB_URI`
 3. **JWT secret** — generate a long random string; never use the default
 4. **CORS** — set `CLIENT_ORIGIN` to your production domain
 5. **Client env** — set `NEXT_PUBLIC_API_URL` to your server's public URL in Vercel / your host
-6. **Domain** — point your domain's DNS to Vercel (frontend) and add an `api.` subdomain CNAME for the server
+6. **Contact info** — set `WHATSAPP_NUMBER`, `CONTACT_EMAIL`, `INSTAGRAM_URL`
+7. **Domain** — point your domain's DNS to Vercel (frontend) and add an `api.` subdomain CNAME for the server
 
-Recommended hosting: Vercel (Next.js frontend) + Railway or Render (Express server) + MongoDB Atlas.
+Node.js >=20 is required (`server/package.json` engines field). `server/railway.toml` configures the Railway build (nixpacks) and start command.
+
+Recommended hosting: Vercel (Next.js frontend) + Railway (Express server) + MongoDB Atlas.
 
 ## Deferred Integrations
 
@@ -240,5 +300,4 @@ Not yet wired up, but `.env.example` keys and service stubs are in place:
 - **Razorpay** — live payment collection
 - **Resend** — transactional email (booking confirmation, inquiry notifications)
 - **WhatsApp Business API** — automated messaging (current links use `wa.me` click-to-chat)
-- **Cloudinary** — cloud image storage (currently using local disk)
 - **Google Analytics / Search Console** — traffic analytics
